@@ -19,6 +19,7 @@ typedef struct board
 typedef struct cell
 {
     int value;
+    int correct_value; /* can be used to store temporery value for solution phase */
     
     bool fixed;
     bool erroneous;
