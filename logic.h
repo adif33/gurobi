@@ -2,7 +2,7 @@
 #ifndef LOGIC_H_   /* Include guard */
 #define LOGIC_H_
 
-include "game.h"
+#include "game.h"
 
 /* return if the board is valid (no prints)*/
 bool validate(Board* board);
@@ -26,7 +26,7 @@ int getNumberOfSolution(Board* board);
 bool autofill(Board* board);
 
 /* return the legal posibilities for a cell */
-int* getPossiblePositioning(Board* board, int row, int column)
+int* getPossiblePositioning(Board* board, int row, int column);
 
 /* return the legal posibilities for a cell */
 int* getPossiblePositioningBlock(Board* board, int row, int column);
