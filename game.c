@@ -20,3 +20,8 @@ Board* createEmptyBoard(){
     
     
 }
+
+
+void printBoard(){
+	printf("print board\n");
+}

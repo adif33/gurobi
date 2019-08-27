@@ -66,4 +66,6 @@ bool trySetVal(Board* board, int col, int row, int value);
  */
 bool isSolved(Board* board);
 
+void printBoard();
+
 #endif /* GAME_H_ */
