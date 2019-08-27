@@ -1,34 +1,22 @@
-#include <stdio.h>
+#include "game.h"
 
 
-struct board get_new_board(int num_blocks_w, int num_blocks_h, int block_size_w, int block_size_h,int fixed_cells) {
-    struct board tmp;
-    int width, height,i ,j;
+
+Board* createEmptyBoard(){
+    Board *board = (Board*)malloc(sizeof(Board));
+    Cell* cells[DEFAUL_BOARD_SIZE];
+    int i, j;
+    
+    board->n = DEFAUL_BOARD_SIZE;
+    board->m = DEFAUL_BOARD_SIZE;
+    board->curr_mode = edit;
+    
+
+    for (i=0; i<DEFAUL_BOARD_SIZE; i++)
+        cells[i] = (Cell*)malloc(DEFAUL_BOARD_SIZE*sizeof(Cell));
+    
+    board->cells = cells;
     
     
     
-    tmp.NUM_BLOCKS_W = num_blocks_w ;
-    tmp.NUM_BLOCKS_H = num_blocks_h ;
-    tmp.BLOCK_SIZE_W = block_size_w ;
-    tmp.BLOCK_SIZE_H = block_size_h ;
-    
-    width = num_blocks_w * block_size_w ;
-    height = num_blocks_h * block_size_h ;
-    
-    tmp.WIDTH = width;
-    tmp.HEIGHT = height;
-    
-    tmp.FIXED_CELLS_NUM = fixed_cells;
-    
-    
-    tmp.CELLS = (int**)malloc(height * sizeof(int *));
-    tmp.CELLS_FIXED = (int**)malloc(height * sizeof(int *));
-    for (i = 0; i < height; ++i)
-    {
-        tmp.CELLS[i] = (int*) malloc(width * sizeof(int));
-        tmp.CELLS_FIXED[i] = (int*) malloc(width * sizeof(int));
-    }
-    
-    
-    return tmp;
 }

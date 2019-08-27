@@ -1,20 +1,15 @@
 #ifndef GAME_H_   /* Include guard */
 #define GAME_H_
+#define DEFAUL_BOARD_SIZE (9)
 
-enum mode{init, solve, edit}
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
-typedef struct board
-{
-    int n; /*n value*/
-    int m; /*m value*/
-    int N; /*not sure yet*/
-    
-    cell **cells;
-    
-    enum mode curr_mode
-    bool mark_errors
-
-} Board;
+typedef enum mode{
+    init,
+    solve,
+    edit} Mode;
 
 typedef struct cell
 {
@@ -27,7 +22,22 @@ typedef struct cell
     
 } Cell;
 
-Board* createBoard(int col, row);
+typedef struct board
+{
+    int n; /*n value*/
+    int m; /*m value*/
+    int N; /*not sure yet*/
+    
+    Cell **cells;
+    
+    Mode curr_mode;
+    bool mark_errors;
+
+} Board;
+
+
+
+Board* createEmptyBoard();
 
 /*
  * check if there is colision of value with row and column
