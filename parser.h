@@ -4,17 +4,29 @@
 #define CMD_MAX_LENGTH 256
 
 typedef enum cmdtype {
+	SOLVE,
+	EDIT,
+	MARK_ERRORS,
+	PRINT_BOARD,
     SET,
-    HINT,
     VALIDATE,
-    RESTART,
+    GUESS,
+    GENERATE,
+    UNDO,
+    REDO,
+    SAVE,
+    HINT,
+    GUESS_HINT,
+    NUM_SOLUTIONS,
+    AUTOFILL,
+    RESET,
     EXIT,
     SKIP} CMDType;
 
 typedef struct {
-    char* param0;
-    char* param1;
-    char* param2;
+    char* x;
+    char* y;
+    char* z;
 
 } CMDArg;
 
