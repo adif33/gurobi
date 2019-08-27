@@ -2,7 +2,16 @@
 #ifndef LOGIC_H_   /* Include guard */
 #define LOGIC_H_
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
 #include "game.h"
+
+
+void setErroneous(Board* board);
+
+bool gotHorizontalDuplicate(Board* board, int row, int column);
 
 /* return if the board is valid (no prints)*/
 bool validate(Board* board);

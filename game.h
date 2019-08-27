@@ -1,6 +1,6 @@
 #ifndef GAME_H_   /* Include guard */
 #define GAME_H_
-#define DEFAUL_BOARD_SIZE (9)
+#define DEFAULT_BLOCK_SIZE (3)
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,7 +14,7 @@ typedef enum mode{
 typedef struct cell
 {
     int value;
-    int correct_value; /* can be used to store temporery value for solution phase */
+    int correct_value; /* can be used to store temporary value for solution phase */
     
     bool fixed;
     bool erroneous;
@@ -29,6 +29,7 @@ typedef struct board
     int N; /*not sure yet*/
     
     Cell **cells;
+    /*Cell cells[9][9];*/
     
     Mode curr_mode;
     bool mark_errors;
@@ -66,6 +67,8 @@ bool trySetVal(Board* board, int col, int row, int value);
  */
 bool isSolved(Board* board);
 
-void printBoard();
+void printBoard(Board* board);
+
+bool isCellEmpty(Board* board, int row, int column);
 
 #endif /* GAME_H_ */
