@@ -5,43 +5,222 @@
 #include "parser.h"
 #include "game.h"
 
-int do_command(CMD* command){
-	char *endptr;
-	int x =0 ;
-	int y =0 ;
-	int z =0;
+int doSolveCommand(CMD* command){
+	printf("solv cmd\n");
+	printf("param x : %s \n", (&(command->args))->x);
+	return 1;
+}
 
+int doEditCommand(CMD* command){
+	printf("edit cmd\n");
+	printf("param x : %s \n", (&(command->args))->x);
+	return 1;
+}
+int doMarkErrorsCommand(CMD* command){
+	printf("param x : %s \n", (&(command->args))->x);
+	return 1;
+}
+int doValidateCommand(CMD* command){
+	printf("param x : %s \n", (&(command->args))->x);
+	return 1;
+}
+int doGuessCommand(CMD* command){
+	printf("param x : %s \n", (&(command->args))->x);
+	printf("test\n");
+	return 1;
+}
+int doGenerateCommand(CMD* command){
+	printf("param x : %s \n", (&(command->args))->x);
+	printf("param y : %s \n", (&(command->args))->y);
+	return 1;
+}
+int doUndoCommand(CMD* command){
+	printf("param x : %s \n", (&(command->args))->x);
+	return 1;
+}
+int doRedoCommand(CMD* command){
+	printf("param x : %s \n", (&(command->args))->x);
+	return 1;
+}
+int doSaveCommand(CMD* command){
+	printf("param x : %s \n", (&(command->args))->x);
+	return 1;
+}
+int doHintCommand(CMD* command){
+	printf("param x : %s \n", (&(command->args))->x);
+	printf("param y : %s \n", (&(command->args))->y);
+	return 1;
+}
+int doGuessHintCommand(CMD* command){
+	printf("param x : %s \n", (&(command->args))->x);
+	printf("param y : %s \n", (&(command->args))->y);
+	return 1;
+}
+int doNumSolutionsCommand(CMD* command){
+	printf("param x : %s \n", (&(command->args))->x);
+	return 1;
+}
+int doAutofillCommand(CMD* command){
+	printf("param x : %s \n", (&(command->args))->x);
+	return 1;
+}
+int doResetCommand(CMD* command){
+	printf("param x : %s \n", (&(command->args))->x);
+	return 1;
+}
+int doExitCommand(CMD* command){
+	printf("param x : %s \n", (&(command->args))->x);
+	return 1;
+}
+
+int doSetCommand(CMD* command){
+	int x = 0;
+	int y = 0;
+	int z = 0;
+	char *endptr;
+
+	printf("param x : %s \n", (&(command->args))->x);
+	x = strtol((&(command->args))->x,&endptr, 10);
+	if (endptr == (&(command->args))->x )
+	 {
+	 	printf("Error: Parameter x Wrong conversion\n");
+	 	return 0;
+	 } 
+
+	printf("param y : %s \n", (&(command->args))->y);
+
+		y = strtol((&(command->args))->y,&endptr, 10);
+	if (endptr == (&(command->args))->y )
+	 {
+	 	printf("Error: Parameter y Wrong conversion\n");
+	 	return 0;
+	 } 
+	printf("param z : %s \n", (&(command->args))->z);
+	z = strtol((&(command->args))->z,&endptr, 10);
+	if (endptr == (&(command->args))->z )
+	 {
+	 	printf("Error: Parameter z Wrong conversion\n");
+	 	return 0;
+	 } 
+
+}
+
+int do_commands(CMD* command){
 
 	switch (command->type) {
-	case SET:
-	    printf("set cmd\n");
-
-	    printf("param 0 : %s \n", (&(command->args))->param0);
-	    x = strtol((&(command->args))->param0,&endptr, 10);
-	    if (endptr == (&(command->args))->param0 )
-	     {
-	     	printf("ERROR: Parameter Wrong conversion\n");
-	     	return 0;
-	     } 
-
-	    printf("param 1 : %s \n", (&(command->args))->param1);
-
-	   	y = strtol((&(command->args))->param1,&endptr, 10);
-	    if (endptr == (&(command->args))->param1 )
-	     {
-	     	printf("ERROR: Parameter Wrong conversion\n");
-	     	return 0;
-	     } 
-	    printf("param 2 : %s \n", (&(command->args))->param2);
-	    z = strtol((&(command->args))->param2,&endptr, 10);
-	    if (endptr == (&(command->args))->param2 )
-	     {
-	     	printf("ERROR: Parameter Wrong conversion\n");
-	     	return 0;
-	     } 
-
+	case SOLVE:
+	    doSolveCommand(command);
 	    printBoard();
 	    break;
+
+	case EDIT:
+	    doEditCommand(command);
+	    printBoard();
+	    break;
+	case MARK_ERRORS:
+		printf("mark errors cmd\n");
+	    if (doMarkErrorsCommand(command))
+	    {
+	    	printBoard();
+	    }
+	    break;
+	case PRINT_BOARD:
+	    printBoard();
+	    break;
+
+	case SET:
+	    printf("set cmd\n");
+	    if (doSetCommand(command))
+	    {
+	    	printBoard();
+	    }
+	    break;
+	case VALIDATE:
+	    printf("validate cmd\n");
+	    if (doValidateCommand(command))
+	    {
+	    	printBoard();
+	    }
+	    break;
+	case GUESS:
+	    printf("guess cmd\n");
+	    if (doGuessCommand(command))
+	    {
+	    	printBoard();
+	    }
+	    break;
+	case GENERATE:
+	    printf("generate cmd\n");
+	    if (doGenerateCommand(command))
+	    {
+	    	printBoard();
+	    }
+	    break;
+	case UNDO:
+	    printf("undo cmd\n");
+	    if (doUndoCommand(command))
+	    {
+	    	printBoard();
+	    }
+	    break;
+	case REDO:
+	    printf("redo cmd\n");
+	    if (doRedoCommand(command))
+	    {
+	    	printBoard();
+	    }
+	    break;
+	case SAVE:
+	    printf("save cmd\n");
+	    if (doSaveCommand(command))
+	    {
+	    	printBoard();
+	    }
+	    break;
+	case HINT:
+	    printf("hint cmd\n");
+	    if (doHintCommand(command))
+	    {
+	    	printBoard();
+	    }
+	    break;
+	case GUESS_HINT:
+	    printf("guess hint cmd\n");
+	    if (doGuessHintCommand(command))
+	    {
+	    	printBoard();
+	    }
+	    break;
+	case NUM_SOLUTIONS:
+	    printf("NumSolutions cmd\n");
+	    if (doNumSolutionsCommand(command))
+	    {
+	    	printBoard();
+	    }
+	    break;
+	case AUTOFILL:
+	    printf("Autofill cmd\n");
+	    if (doAutofillCommand(command))
+	    {
+	    	printBoard();
+	    }
+	    break;
+	case RESET:
+	    printf("reset cmd\n");
+	    if (doResetCommand(command))
+	    {
+	    	printBoard();
+	    }
+	    break;
+	case EXIT:
+	    printf("Exit cmd\n");
+	    if (doExitCommand(command))
+	    {
+	    	printBoard();
+	    }
+	    break;
+
+
     }
 
 }
@@ -83,7 +262,7 @@ int play_game(){
 		{
 			continue;
 		} 
-		if (!do_command(&cmd)) {
+		if (!do_commands(&cmd)) {
 			continue;
 		}
 
