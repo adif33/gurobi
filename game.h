@@ -76,4 +76,6 @@ bool gotVerticalDuplicate(Board* board, int row, int column);
 
 bool gotBlockDuplicate(Board* board, int row, int column);
 
+void setMarkErrors(Board* board, bool value);
+
 #endif /* GAME_H_ */

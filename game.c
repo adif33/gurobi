@@ -173,6 +173,11 @@ bool gotBlockDuplicate(Board* board, int row, int column){
 }
 
 
+void setMarkErrors(Board* board, bool value){
+    board->mark_errors = value;
+}
+
+
 
 
 
