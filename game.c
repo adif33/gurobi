@@ -31,6 +31,10 @@ Board* createEmptyBoard(){
     
 }
 
+Cell* getCell(Board* board, int row, int column){
+    return &board->cells[row][column];
+}
+
 bool isCellEmpty(Board* board, int row, int column){
     return board->cells[row][column].value == 0;
 }
@@ -64,8 +68,24 @@ void printPoint(Board* board, int row, int column){
 
 }
 
+
+bool setVal(Board* board, int row, int col, int value){
+    Cell* curr_cell;
+
+    if(board->curr_mode == init){
+        return false;
+    }
+    curr_cell = getCell(board, row, col);
+    if (curr_cell->fixed){
+        return false;
+    }
+    curr_cell->value = value;
+    return true;
+
+}
+
 void printBoard(Board* board){
-    int n, m, row, column, N, val;
+    int n, m, row, column, N;
 
     n = board->n;
     m = board->m;
@@ -94,9 +114,64 @@ void printBoard(Board* board){
     }
     printHorizontalSeperator(N, m);
 
-
-
 }
+
+bool gotHorizontalDuplicate(Board* board, int row, int column){
+    int val, i;
+
+    val = board->cells[row][column].value;
+    for(i=0; i<board->N; i++){
+        if (i == column) {
+            continue;
+        } else if (board->cells[row][i].value == val){
+            return true;
+        }
+
+    }
+
+    return false;
+}
+
+bool gotVerticalDuplicate(Board* board, int row, int column){
+    int val, i;
+
+    val = board->cells[row][column].value;
+    for(i=0; i<board->N; i++){
+        if (i == row) {
+            continue;
+        } else if (board->cells[i][column].value == val){
+            return true;
+        }
+
+    }
+
+    return false;
+}
+
+bool gotBlockDuplicate(Board* board, int row, int column){
+    int i, j, val, block_start_row, block_end_row, block_start_column, block_end_column;
+    val = board->cells[row][column].value;
+
+    block_start_row = (row/board->m)*board->m;
+    block_start_column= (column/board->n)*board->n;
+
+    block_end_row = (row/board->m+1)*(board->m);
+    block_end_column= (column/board->n+1)*(board->n);
+
+    for(i=block_start_row; i<block_end_row; i++){
+        for(j=block_start_column; j<block_end_column; j++){
+            if (i==row && j==column){
+                continue;
+            } else if(board->cells[i][j].value == val){
+                return true;
+            }
+        }
+
+    }
+
+    return false;
+}
+
 
 
 

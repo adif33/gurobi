@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+
+
 typedef enum mode{
     init,
     solve,
@@ -26,10 +28,9 @@ typedef struct board
 {
     int n; /*n value*/
     int m; /*m value*/
-    int N; /*not sure yet*/
+    int N; /* n*m */
     
     Cell **cells;
-    /*Cell cells[9][9];*/
     
     Mode curr_mode;
     bool mark_errors;
@@ -39,6 +40,8 @@ typedef struct board
 
 
 Board* createEmptyBoard();
+
+bool setVal(Board* board, int row, int col, int value);
 
 /*
  * check if there is colision of value with row and column
@@ -53,14 +56,9 @@ bool isInBlock(Board* board, int val, int col, int row);
 int getVal(Board* board, int col, int row);
 
 /*
- * set value
+ * set value if legal and return true if success
  */
-void setVal(Board* board, int col, int row, int value);
 
-/*
- * set value if legal and return True is success
- */
-bool trySetVal(Board* board, int col, int row, int value);
 
 /*
  * This function checks whether the puzzle is solved and the game is over.
@@ -70,5 +68,12 @@ bool isSolved(Board* board);
 void printBoard(Board* board);
 
 bool isCellEmpty(Board* board, int row, int column);
+
+
+bool gotHorizontalDuplicate(Board* board, int row, int column);
+
+bool gotVerticalDuplicate(Board* board, int row, int column);
+
+bool gotBlockDuplicate(Board* board, int row, int column);
 
 #endif /* GAME_H_ */
