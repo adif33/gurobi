@@ -105,118 +105,118 @@ int doSetCommand(CMD* command){
 
 }
 
-int do_commands(CMD* command){
+int do_commands(CMD* command, Board* board){
 
 	switch (command->type) {
 	case SOLVE:
 	    doSolveCommand(command);
-	    printBoard();
+	    printBoard(board);
 	    break;
 
 	case EDIT:
 	    doEditCommand(command);
-	    printBoard();
+	    printBoard(board);
 	    break;
 	case MARK_ERRORS:
 		printf("mark errors cmd\n");
 	    if (doMarkErrorsCommand(command))
 	    {
-	    	printBoard();
+	    	printBoard(board);
 	    }
 	    break;
 	case PRINT_BOARD:
-	    printBoard();
+	    printBoard(board);
 	    break;
 
 	case SET:
 	    printf("set cmd\n");
 	    if (doSetCommand(command))
 	    {
-	    	printBoard();
+	    	printBoard(board);
 	    }
 	    break;
 	case VALIDATE:
 	    printf("validate cmd\n");
 	    if (doValidateCommand(command))
 	    {
-	    	printBoard();
+	    	printBoard(board);
 	    }
 	    break;
 	case GUESS:
 	    printf("guess cmd\n");
 	    if (doGuessCommand(command))
 	    {
-	    	printBoard();
+	    	printBoard(board);
 	    }
 	    break;
 	case GENERATE:
 	    printf("generate cmd\n");
 	    if (doGenerateCommand(command))
 	    {
-	    	printBoard();
+	    	printBoard(board);
 	    }
 	    break;
 	case UNDO:
 	    printf("undo cmd\n");
 	    if (doUndoCommand(command))
 	    {
-	    	printBoard();
+	    	printBoard(board);
 	    }
 	    break;
 	case REDO:
 	    printf("redo cmd\n");
 	    if (doRedoCommand(command))
 	    {
-	    	printBoard();
+	    	printBoard(board);
 	    }
 	    break;
 	case SAVE:
 	    printf("save cmd\n");
 	    if (doSaveCommand(command))
 	    {
-	    	printBoard();
+	    	printBoard(board);
 	    }
 	    break;
 	case HINT:
 	    printf("hint cmd\n");
 	    if (doHintCommand(command))
 	    {
-	    	printBoard();
+	    	printBoard(board);
 	    }
 	    break;
 	case GUESS_HINT:
 	    printf("guess hint cmd\n");
 	    if (doGuessHintCommand(command))
 	    {
-	    	printBoard();
+	    	printBoard(board);
 	    }
 	    break;
 	case NUM_SOLUTIONS:
 	    printf("NumSolutions cmd\n");
 	    if (doNumSolutionsCommand(command))
 	    {
-	    	printBoard();
+	    	printBoard(board);
 	    }
 	    break;
 	case AUTOFILL:
 	    printf("Autofill cmd\n");
 	    if (doAutofillCommand(command))
 	    {
-	    	printBoard();
+	    	printBoard(board);
 	    }
 	    break;
 	case RESET:
 	    printf("reset cmd\n");
 	    if (doResetCommand(command))
 	    {
-	    	printBoard();
+	    	printBoard(board);
 	    }
 	    break;
 	case EXIT:
 	    printf("Exit cmd\n");
 	    if (doExitCommand(command))
 	    {
-	    	printBoard();
+	    	printBoard(board);
 	    }
 	    break;
 
@@ -233,9 +233,11 @@ int play_game(){
 	int n = 0;
 	int m =0;
 	int is_over = 0;
+	Board* board;
+	board = createEmptyBoard();
 	printf("play game\n");
 	get_n_m(&n,&m);
-	printBoard();
+	printBoard(board);
 	
 
 	while(1){
@@ -262,7 +264,7 @@ int play_game(){
 		{
 			continue;
 		} 
-		if (!do_commands(&cmd)) {
+		if (!do_commands(&cmd, board)) {
 			continue;
 		}
 
