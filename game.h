@@ -39,7 +39,8 @@ typedef struct board
 
 
 
-Board* createEmptyBoard();
+Board* createEmptyBoard(int n, int m);
+Board* createInitBoard();
 
 bool setVal(Board* board, int row, int col, int value);
 
@@ -67,7 +68,11 @@ bool isSolved(Board* board);
 
 void printBoard(Board* board);
 
+int getCellValue(Board* board, int row, int column);
+
 bool isCellEmpty(Board* board, int row, int column);
+
+Cell* getCell(Board* board, int row, int column);
 
 
 bool gotHorizontalDuplicate(Board* board, int row, int column);
