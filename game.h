@@ -43,6 +43,7 @@ Board* createEmptyBoard(int n, int m);
 Board* createInitBoard();
 
 bool setVal(Board* board, int row, int col, int value);
+void setFixed(Board* board, int row, int col, bool fixed);
 
 /*
  * check if there is colision of value with row and column

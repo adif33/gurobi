@@ -1,0 +1,138 @@
+#include "loader.h"
+
+void saveBoard(Board* board, char* path){
+    FILE* fp;
+    char* text;
+
+    fp = fopen ("./gurobi_save2", "w+");
+
+    text = createSavedBoardText(board);
+    fprintf(fp, "%s", text);
+
+    fclose(fp);
+    free(text);
+
+    return;
+
+}
+
+char* createSavedBoardText(Board* board){
+    int len, row, column;
+    char* text;
+    Cell* curr_cell;
+
+
+    len = 0;
+    text = (char*)malloc(DEFAULT_TEXT_LENGTH);
+    len += sprintf(text+len, "%d %d\n", board->n, board->m);
+    for(row=0; row<board->N; row++){
+        for(column=0; column<board->N; column++){
+            curr_cell = getCell(board, row, column);
+            if (curr_cell->fixed){
+                len += sprintf(text+len, "%d.", curr_cell->value);
+            } else{
+                len += sprintf(text+len, "%d", curr_cell->value);
+            }
+            if (column!=board->N-1){
+                len += sprintf(text+len, " ");
+            }
+        }
+        if (row!=board->N-1) {
+            len += sprintf(text + len, "\n");
+        }
+    }
+    printf("text:\n%s\n$$$$", text);
+
+    return text;
+}
+
+bool isPossibleSetInput(Board* board, int input){
+    return input<=board->N;
+}
+
+
+
+
+
+Board* loadBoard(char* path){
+    FILE * fd;
+    size_t len = 0;
+    ssize_t read;
+    int n, m, N, row, column, input, string_input_len;
+    char c;
+    char* string_input;
+    Board* board;
+
+
+
+    fd = fopen(path, "r");
+
+
+    if (fd == NULL)
+        return NULL;
+
+
+
+    fscanf(fd, "%d %d\n", &n, &m);
+
+    row = 0;
+    column = 0;
+    board = createEmptyBoard(n, m);
+    N = board->N;
+    printf("%d\n", N);
+
+    string_input = (char*)malloc(DEFAULT_MATRIX_TEXT_SIZE);
+    string_input[0] = '\0';
+
+    while ((c = (char)fgetc(fd)) != EOF  && (row!=N) && (column!=N*N))
+    {
+        printf(">%c: %d %d\n", c, row, column);
+
+        if (c==' ' || c=='\t' || c=='\n'||c=='.'){
+
+            if (strlen(string_input)==0){
+                continue;
+
+            } else{
+                input = atoi(string_input);
+
+                if (isPossibleSetInput(board, input)){
+                    setVal(board, row, column%N, input);
+                    if(c=='.'){
+                        setFixed(board, row, column%N, true);
+                    }
+                    column++;
+
+                    if(column%N==N-1){
+                        row++;
+                    }
+                    string_input[0] = '\0';
+
+                } else{
+                    /*ERROR!!!!*/
+                    printf("ERROR1!!!");
+                    return NULL;
+                }
+            }
+        } else{
+
+            if (isdigit(c)){ /*is digit*/
+                string_input_len = strlen(string_input);
+                string_input[string_input_len] = c;
+                string_input[string_input_len+1] = '\0';
+
+            } else{
+                /*Error!!!*/
+                printf("ERROR2!!!");
+                return NULL;
+            }
+
+        }
+
+    }
+    printBoard(board);
+
+
+
+}
+

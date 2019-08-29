@@ -186,6 +186,13 @@ void setMarkErrors(Board* board, bool value){
     board->mark_errors = value;
 }
 
+void setFixed(Board* board, int row, int col, bool fixed){
+    Cell* curr_cell;
+
+    curr_cell = getCell(board, row, col);
+    curr_cell->fixed = fixed;
+}
+
 
 
 
