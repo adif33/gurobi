@@ -84,4 +84,10 @@ bool gotBlockDuplicate(Board* board, int row, int column);
 
 void setMarkErrors(Board* board, bool value);
 
+bool copyBoard(Board* dst, Board* src);
+
+bool checkRowColValid(Board* board,int row, int column);
+
+void freeBoard(Board* board);
+
 #endif /* GAME_H_ */

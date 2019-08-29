@@ -27,6 +27,9 @@ typedef struct {
     char* x;
     char* y;
     char* z;
+    int x_int;
+    int y_int;
+    int z_int;
 
 } CMDArg;
 

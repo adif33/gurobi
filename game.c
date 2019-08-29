@@ -1,4 +1,7 @@
+#include <string.h>
+
 #include "game.h"
+#include "main_aux.h"
 
 
 Board* createEmptyBoard(int n, int m){
@@ -194,13 +197,49 @@ void setFixed(Board* board, int row, int col, bool fixed){
 }
 
 
+bool copyBoard(Board* dst, Board* src){
+    int N;
+    int i =0 ;
+    int j = 0;
+    Cell* src_cell;
+    Cell* dst_cell;
+    if (src->N != dst->N ){
+        printf("Error: boards not same size ! \n");
+        return 0;
+    }
 
+    N = src->N;
 
+    dst->curr_mode = src->curr_mode;
 
+    for (i = 0; i < N ; ++i) {
+        for (j = 0; j < N ; ++j) {
+            /*
+            printf("i,j: %i,%i value: %i \n",i,j,getCellValue(src , i, j));
+            */
+            src_cell = getCell(src,i,j);
+            dst_cell = getCell(dst,i,j);
+            memcpy(dst_cell,src_cell, sizeof(Cell));
+        }
 
+    }
+    return 1;
+}
 
+bool checkRowColValid(Board* board,int row, int column){
+    if (column > board->N || column <=0 ){
+        printf(PARAMETER_X_ILLEGAL_ERROR);
+        return 0;
+    }
+    if (row > board->N || row <=0 ){
+        printf(PARAMETER_Y_ILLEGAL_ERROR);
+        return 0;
+    }
+    return 1;
+}
+void freeBoard(Board* board){
+    printf("Freeing board : %p \n", (void*)board);
 
-
-
+}
 
 
