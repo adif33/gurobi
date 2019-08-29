@@ -7,6 +7,7 @@
 #include "game.h"
 #include <stdbool.h>
 #include <ctype.h>
+#include <string.h>
 
 void saveBoard(Board* board, char* path);
 

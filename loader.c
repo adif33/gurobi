@@ -4,7 +4,7 @@ void saveBoard(Board* board, char* path){
     FILE* fp;
     char* text;
 
-    fp = fopen ("./gurobi_save2", "w+");
+    fp = fopen (path, "w+");
 
     text = createSavedBoardText(board);
     fprintf(fp, "%s", text);
@@ -56,8 +56,6 @@ bool isPossibleSetInput(Board* board, int input){
 
 Board* loadBoard(char* path){
     FILE * fd;
-    size_t len = 0;
-    ssize_t read;
     int n, m, N, row, column, input, string_input_len;
     char c;
     char* string_input;
@@ -79,14 +77,12 @@ Board* loadBoard(char* path){
     column = 0;
     board = createEmptyBoard(n, m);
     N = board->N;
-    printf("%d\n", N);
 
     string_input = (char*)malloc(DEFAULT_MATRIX_TEXT_SIZE);
     string_input[0] = '\0';
 
     while ((c = (char)fgetc(fd)) != EOF  && (row!=N) && (column!=N*N))
     {
-        printf(">%c: %d %d\n", c, row, column);
 
         if (c==' ' || c=='\t' || c=='\n'||c=='.'){
 
@@ -98,7 +94,7 @@ Board* loadBoard(char* path){
 
                 if (isPossibleSetInput(board, input)){
                     setVal(board, row, column%N, input);
-                    if(c=='.'){
+                    if(c=='.'){ /*possible bug. not supporting multiple '.' and such..*/
                         setFixed(board, row, column%N, true);
                     }
                     column++;
@@ -130,9 +126,8 @@ Board* loadBoard(char* path){
         }
 
     }
-    printBoard(board);
-
-
-
+    free(string_input);
+    fclose(fd);
+    return board;
 }
 
