@@ -5,26 +5,42 @@
 #include "parser.h"
 
 
-void get_n_m(int *n,int*m){
-	
-	int tm =0;
-	int tn =0;
-	int flag = 0;
-
-	printf("Please enter n and m:\n");
-	flag = scanf("%i %i", &tm,&tn);
-	if (flag <= 0)
-	{
-		printf("Error in scanf()\n");
-		exit(-1);
-	}
-
-	printf("M is: %i, N is: %i.\n",tm,tn );
-}
-
+/*
+ * return 0 if EOF is reached, if the command is longer
+ * than CMD_MAX_LENGTH it returns invalid  command
+ */
 
 int get_command(char* text_cmd){
-	return fgets(text_cmd, CMD_MAX_LENGTH + 2, stdin) == NULL;
+    char* ptr;
+    int len;
+    char c;
+
+    ptr = fgets(text_cmd, CMD_MAX_LENGTH +1  , stdin);
+    if (ptr == NULL){
+        return 0;
+    }
+
+    len = strlen(text_cmd);
+    c = text_cmd[len-1];
+
+    if (c == '\n' || len != CMD_MAX_LENGTH )
+    {
+        return 1;
+    }
+    /* read until \n FML*/
+    while  (ptr != NULL && c != '\n' ){
+        ptr = fgets(text_cmd, CMD_MAX_LENGTH +1 , stdin);
+        len = strlen(text_cmd);
+        c = text_cmd[len-1];
+
+    }
+    if (ptr == NULL){
+        return 0;
+    }
+    text_cmd[0] = 97 ;
+    text_cmd[1] = 0 ;
+    return 1;
+
 }
 
 int parse_command(char* text, CMD* command){
@@ -33,6 +49,7 @@ int parse_command(char* text, CMD* command){
 	int argsNum = 0;
 
 	char* type ;
+
 	type = strtok(text, " \t\r\n");
 	if (type == NULL) {
 		command->type = SKIP;
