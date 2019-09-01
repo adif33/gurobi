@@ -63,7 +63,7 @@ int getCellValue(Board* board, int row, int column){
 bool isCellEmpty(Board* board, int row, int column){
     Cell* curr_cell;
     curr_cell = getCell(board, row, column);
-    return curr_cell->value == 0;
+    return (curr_cell->value == 0);
 }
 
 bool isCellFixed(Board* board, int row, int column){
@@ -259,4 +259,19 @@ bool checkRowColValid(Board* board,int row, int column){
     return 1;
 }
 
+Board* creatCopiedBoard(Board* old_board){
 
+    Board* new_board;
+    int row, column, N;
+
+    new_board = createEmptyBoard(old_board->n, old_board->m);
+    N = new_board->N;
+
+    for(row=0; row<N; row++) {
+        for (column = 0; column < N; column++) {
+            setVal(new_board, row, column, getCellValue(old_board, row, column));
+        }
+    }
+
+    return new_board;
+}

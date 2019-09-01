@@ -55,12 +55,6 @@ bool isInRowAndColumn(Board* board, int val, int col, int row);
  */
 bool isInBlock(Board* board, int val, int col, int row);
 
-int getVal(Board* board, int col, int row);
-
-/*
- * set value if legal and return true if success
- */
-
 
 /*
  * This function checks whether the puzzle is solved and the game is over.
@@ -86,10 +80,12 @@ bool gotBlockDuplicate(Board* board, int row, int column);
 
 void setMarkErrors(Board* board, bool value);
 
-bool copyBoard(Board* dst, Board* src);
-
 bool checkRowColValid(Board* board,int row, int column);
 
 void freeBoard(Board* board);
+
+bool copyBoard(Board* old_board, Board* new_board);
+
+Board* creatCopiedBoard(Board* board);
 
 #endif /* GAME_H_ */

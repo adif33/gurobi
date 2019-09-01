@@ -8,6 +8,8 @@
 
 #include "game.h"
 
+#define MAX_STACK_CAPACITY (10000)
+
 
 void setErroneous(Board* board);
 
@@ -44,7 +46,23 @@ int* getPossiblePositioningRow(Board* board, int row, int column);
 
 int* getPossiblePositioningColumn(Board* board, int row, int column);
 
+bool isBoardSolved(Board* board);
 
+
+typedef struct stackItem{
+    Board* board;
+    int row;
+    int column;
+
+} StackItem;
+
+typedef struct stack
+{
+    int maxsize;	// define max capacity of stack
+    int top;
+//    StackItem *items;
+    StackItem* *items;
+} Stack;
 
 
 #endif /* LOGIC_H_ */
