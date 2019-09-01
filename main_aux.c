@@ -75,6 +75,7 @@ void printList(DubList* list){
             printf("node addr is  %p \n",(void*)tmp);
             printf("\tnext id is: %p  \n",(void*)tmp->next);
             printf("\tprev id is: %p  \n",(void*)tmp->prev);
+            printf("\tboard is: %p  \n",(void*)tmp->board);
             tmp = tmp->next;
         }
         printf("BACKWARDS:\n");
@@ -85,6 +86,7 @@ void printList(DubList* list){
             printf("node addr is  %p \n",(void*)tmp);
             printf("\tnext id is: %p  \n",(void*)tmp->next);
             printf("\tprev id is: %p  \n",(void*)tmp->prev);
+            printf("\tboard is: %p  \n",(void*)tmp->board);
             tmp = tmp->prev;
         }
         printf("done printing \n");
@@ -447,8 +449,9 @@ int play_game(){
 	while(1){
 		CMD cmd = {0};
 		char cmd_text[CMD_MAX_LENGTH + 1] = {0};
-
+		old_board = (moves->curr)->board;
         new_board = createEmptyBoard(3,3);
+
         copyBoard(new_board,old_board);
 
 		if (!get_command(cmd_text))
@@ -466,13 +469,16 @@ int play_game(){
 		if (cmd.type != UNDO && cmd.type != REDO)
 		{
             pushToList(moves,new_board);
-            old_board = new_board;
 		}
+
+		/*
+		 * TODO : if exiting remember to fre new_board
+		printf("oldd board %p \n",old_board);
+		printf("new board %p \n",new_board);
+		printList(moves);
+		*/
 		printBoard((moves->curr)->board);
-
-
-
-
+		
 	}
 
 	return is_over;
