@@ -83,7 +83,6 @@ Board* loadBoard(char* path){
 
     while ((c = (char)fgetc(fd)) != EOF  && (row!=N) && (column!=N*N))
     {
-
         if (c==' ' || c=='\t' || c=='\n'||c=='.'){
 
             if (strlen(string_input)==0){
@@ -99,7 +98,7 @@ Board* loadBoard(char* path){
                     }
                     column++;
 
-                    if(column%N==N-1){
+                    if(column%N==0){
                         row++;
                     }
                     string_input[0] = '\0';
