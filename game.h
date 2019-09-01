@@ -73,6 +73,8 @@ int getCellValue(Board* board, int row, int column);
 
 bool isCellEmpty(Board* board, int row, int column);
 
+bool isCellFixed(Board* board, int row, int column);
+
 Cell* getCell(Board* board, int row, int column);
 
 

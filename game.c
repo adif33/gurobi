@@ -61,7 +61,15 @@ int getCellValue(Board* board, int row, int column){
 }
 
 bool isCellEmpty(Board* board, int row, int column){
-    return board->cells[row][column].value == 0;
+    Cell* curr_cell;
+    curr_cell = getCell(board, row, column);
+    return curr_cell->value == 0;
+}
+
+bool isCellFixed(Board* board, int row, int column){
+    Cell* curr_cell;
+    curr_cell = getCell(board, row, column);
+    return curr_cell->fixed;
 }
 
 void printHorizontalSeperator(int N, int m){
