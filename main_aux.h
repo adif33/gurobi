@@ -12,6 +12,7 @@
 
 #include "game.h"
 #include "loader.h"
+#include "commands.h"
 
 typedef struct node Node;
 struct node {

@@ -1,5 +1,5 @@
 CC = gcc
-OBJS = main.o logic.o parser.o solver.o game.o main_aux.o loader.o ilp_solver.o
+OBJS = main.o logic.o parser.o solver.o game.o main_aux.o loader.o ilp_solver.o commands.o
 EXEC = sudoku-console
 COMP_FLAG = -ansi -Wall -Wextra  -pedantic-errors
 GUROBI_COMP = -I/opt/gurobi811/linux64/include
@@ -20,6 +20,8 @@ main_aux.o: main_aux.c main_aux.h
 loader.o: loader.c loader.h
 	$(CC) $(COMP_FLAG) -c $*.c
 ilp_solver.o: ilp_solver.c ilp_solver.h
+	$(CC) $(COMP_FLAG) $(GUROBI_COMP) -c $*.c
+commands.o: commands.c commands.h
 	$(CC) $(COMP_FLAG) $(GUROBI_COMP) -c $*.c
 clean:
 	rm -f $(OBJS) $(EXEC)
