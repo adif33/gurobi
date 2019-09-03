@@ -52,8 +52,6 @@ bool isPossibleSetInput(Board* board, int input){
 
 
 
-
-
 Board* loadBoard(char* path){
     FILE * fd;
     int n, m, N, row, column, input, string_input_len;
