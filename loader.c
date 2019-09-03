@@ -67,6 +67,7 @@ Board* loadBoard(char* path){
 
 
     if (fd == NULL)
+        /*TODO:print error*/
         return NULL;
 
 
