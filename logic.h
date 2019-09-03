@@ -58,9 +58,8 @@ typedef struct stackItem{
 
 typedef struct stack
 {
-    int maxsize;	// define max capacity of stack
+    int maxsize;
     int top;
-//    StackItem *items;
     StackItem* *items;
 } Stack;
 
