@@ -260,7 +260,7 @@ bool checkRowColValid(Board* board,int row, int column){
 }
 
 Board* creatCopiedBoard(Board* old_board){
-
+    /*TODO: add fixed and such*/
     Board* new_board;
     int row, column, N;
 

@@ -64,9 +64,12 @@ Board* loadBoard(char* path){
     fd = fopen(path, "r");
 
 
-    if (fd == NULL)
+    if (fd == NULL) {
         /*TODO:print error*/
+        printf("ERROR1!!!\n");
+        printf(" Value of errno: %d\n ", errno);
         return NULL;
+    }
 
 
 
@@ -104,7 +107,7 @@ Board* loadBoard(char* path){
 
                 } else{
                     /*ERROR!!!!*/
-                    printf("ERROR1!!!");
+                    printf("ERROR2!!!\n");
                     return NULL;
                 }
             }
@@ -117,7 +120,7 @@ Board* loadBoard(char* path){
 
             } else{
                 /*Error!!!*/
-                printf("ERROR2!!!");
+                printf("ERROR3!!!\n");
                 return NULL;
             }
 
@@ -126,6 +129,8 @@ Board* loadBoard(char* path){
     }
     free(string_input);
     fclose(fd);
+    printf("inside: %p\n", board);
+
     return board;
 }
 

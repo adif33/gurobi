@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include <ctype.h>
 #include <string.h>
+#include <errno.h>
 
 void saveBoard(Board* board, char* path);
 

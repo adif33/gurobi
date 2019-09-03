@@ -186,15 +186,20 @@ int freeList(DubList* list){
 
 /*douly linked list end*/
 
-int doSolveCommand(CMD* command){
+int doSolveCommand(CMD* command, Board* board){
 	printf("solv cmd\n");
 	printf("param x : %s \n", (&(command->args))->x);
 	return 1;
 }
 
-int doEditCommand(CMD* command){
-	printf("edit cmd\n");
-	printf("param x : %s \n", (&(command->args))->x);
+int doEditCommand(CMD* command, Board** board_ptr){
+    printf("param x : %s \n", (&(command->args))->x);
+    *board_ptr = loadBoard((&(command->args))->x);
+    printf("outside: %p\n", *board_ptr);
+    printf("param x : %s \n", (&(command->args))->x);
+
+    printBoard(*board_ptr);
+
 	return 1;
 }
 int doMarkErrorsCommand(CMD* command,Board* board){
@@ -308,18 +313,19 @@ int doSetCommand(CMD* command,Board* board){
     return 1;
 }
 
-bool do_commands(CMD* command, Board* board,DubList* moves){
+bool do_commands(CMD* command, Board** board_ptr, DubList* moves){
+    Board* board;
 
 	switch (command->type) {
 	case SOLVE:
-	    doSolveCommand(command);
+	    doSolveCommand(command, board);
 	    printBoard(board);
 	    break;
 
 	case EDIT:
-	    doEditCommand(command);
-	    printBoard(board);
+	    doEditCommand(command, board_ptr);
 	    break;
+
 	case MARK_ERRORS:
 		printf("mark errors cmd\n");
 	    if (doMarkErrorsCommand(command,board))
@@ -327,13 +333,14 @@ bool do_commands(CMD* command, Board* board,DubList* moves){
 	    	printBoard(board);
 	    }
 	    break;
+
 	case PRINT_BOARD:
 	    printBoard(board);
 	    break;
 
 	case SET:
 	    printf("set cmd\n");
-	    if (doSetCommand(command,board))
+	    if (doSetCommand(command, board))
 	    {
             return true;
 	    }
@@ -346,6 +353,7 @@ bool do_commands(CMD* command, Board* board,DubList* moves){
 	    	printBoard(board);
 	    }
 	    break;
+
 	case GUESS:
 	    printf("guess cmd\n");
 	    if (doGuessCommand(command))
@@ -353,6 +361,7 @@ bool do_commands(CMD* command, Board* board,DubList* moves){
 	    	printBoard(board);
 	    }
 	    break;
+
 	case GENERATE:
 	    printf("generate cmd\n");
 	    if (doGenerateCommand(command))
@@ -360,6 +369,7 @@ bool do_commands(CMD* command, Board* board,DubList* moves){
 	    	printBoard(board);
 	    }
 	    break;
+
 	case UNDO:
 	    printf("undo cmd\n");
         if (doUndoCommand(moves))
@@ -367,6 +377,7 @@ bool do_commands(CMD* command, Board* board,DubList* moves){
             return true;
         }
         return false;
+
 	case REDO:
 	    printf("redo cmd\n");
 	    if (doRedoCommand(moves))
@@ -374,6 +385,7 @@ bool do_commands(CMD* command, Board* board,DubList* moves){
             return true;
 	    }
         return false;
+
 	case SAVE:
 	    printf("save cmd\n");
 	    if (doSaveCommand(command))
@@ -381,6 +393,7 @@ bool do_commands(CMD* command, Board* board,DubList* moves){
 	    	printBoard(board);
 	    }
 	    break;
+
 	case HINT:
 	    printf("hint cmd\n");
 	    if (doHintCommand(command))
@@ -388,6 +401,7 @@ bool do_commands(CMD* command, Board* board,DubList* moves){
 	    	printBoard(board);
 	    }
 	    break;
+
 	case GUESS_HINT:
 	    printf("guess hint cmd\n");
 	    if (doGuessHintCommand(command))
@@ -395,6 +409,7 @@ bool do_commands(CMD* command, Board* board,DubList* moves){
 	    	printBoard(board);
 	    }
 	    break;
+
 	case NUM_SOLUTIONS:
 	    printf("NumSolutions cmd\n");
 	    if (doNumSolutionsCommand(command))
@@ -402,6 +417,7 @@ bool do_commands(CMD* command, Board* board,DubList* moves){
 	    	printBoard(board);
 	    }
 	    break;
+
 	case AUTOFILL:
 	    printf("Autofill cmd\n");
 	    if (doAutofillCommand(command))
@@ -409,6 +425,7 @@ bool do_commands(CMD* command, Board* board,DubList* moves){
 	    	printBoard(board);
 	    }
 	    break;
+
 	case RESET:
 	    printf("reset cmd\n");
 	    if (doResetCommand(command))
@@ -424,12 +441,55 @@ bool do_commands(CMD* command, Board* board,DubList* moves){
 	    }
 	    break;
 
-
     }
-    return 0;
+    return true;
 
 }
 
+
+bool mainLoop(){
+    Board* board;
+    DubList dlist = {0};
+    DubList* moves = &dlist;
+
+    CMD cmd = {0};
+    char cmd_text[CMD_MAX_LENGTH + 1] = {0};
+
+    board = createEmptyBoard(3, 3);
+    printBoard(board);
+
+
+    while (true){
+
+        pushToList(moves, creatCopiedBoard(board));
+
+        if (!get_command(cmd_text))
+        {
+            break;
+        }
+
+        if (!parse_command(cmd_text, &cmd))
+        {
+            continue;
+        }
+
+        if (!do_commands(&cmd, &board, moves)) {
+            continue;
+        }
+        /* Conmnand successded !*/
+        if (false && cmd.type != UNDO && cmd.type != REDO)
+        {
+
+            pushToList(moves, creatCopiedBoard(board));
+
+        }
+
+        printBoard(board);
+
+    }
+
+    return true;
+}
 
 int play_game(){
 
@@ -449,26 +509,27 @@ int play_game(){
 	while(1){
 		CMD cmd = {0};
 		char cmd_text[CMD_MAX_LENGTH + 1] = {0};
-		old_board = (moves->curr)->board;
-        new_board = createEmptyBoard(3,3);
+		Board* board;
 
-        copyBoard(new_board,old_board);
+		old_board = (moves->curr)->board;
+        new_board = creatCopiedBoard(old_board);
+
 
 		if (!get_command(cmd_text))
 		{
 			break;
 		}
-		if ( !parse_command(cmd_text,&cmd) )
+		if ( !parse_command(cmd_text, &cmd) )
 		{
 			continue;
 		} 
-		if (!do_commands(&cmd, new_board,moves)) {
+		if (!do_commands(&cmd, &board, moves)) {
 			continue;
 		}
 		/* Conmnand successded !*/
 		if (cmd.type != UNDO && cmd.type != REDO)
 		{
-            pushToList(moves,new_board);
+            pushToList(moves, creatCopiedBoard(board));
 		}
 
 		/*

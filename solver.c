@@ -150,3 +150,60 @@ int getNumberOfSolution(Board* board){
 
     return counter;
 }
+
+
+int countEmpty(Board* board){
+    return 10;
+}
+
+void getRandomEmpty(Board* board, int* row, int* column){
+    return;
+}
+
+int getLegalValues(int* values, Board* board, int row, int column){
+    return 10;
+}
+
+bool generate(Board* board, int x, int y){
+    int empty, count, row, column, size, value, i;
+    int* values;
+    Board* original_copy;
+    time_t t;
+
+    srand((unsigned) time(&t));
+
+    empty = countEmpty(board);
+    if (empty<x){
+        /*ERRORL print error*/
+        return board;
+    }
+
+
+
+    while(i<1000) {
+        original_copy = creatCopiedBoard(board);
+        for (count = 0; count < x; count++) {
+            getRandomEmpty(original_copy, &row, &column);
+            size = getLegalValues(values, original_copy, row, column);
+            if(size==0){
+                break;
+            }
+            value = values[rand() % size];
+            setVal(original_copy, row, column, value);
+        }
+
+        if(count+1!=x){
+            break;
+        }
+
+        freeBoard(original_copy);
+        i++;
+    }
+
+
+
+    printf("%d\n", rand() % 50);
+
+    return true;
+
+}
