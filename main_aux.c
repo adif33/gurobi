@@ -194,13 +194,8 @@ bool mainLoop(){
     CMD cmd = {0};
     char cmd_text[CMD_MAX_LENGTH + 1] = {0};
 
-    board = createEmptyBoard(3, 3);
-    printBoard(board);
-
 
     while (true){
-
-        pushToList(moves, creatCopiedBoard(board));
 
         if (!get_command(cmd_text))
         {
@@ -212,23 +207,21 @@ bool mainLoop(){
             continue;
         }
 
-        if (!do_commands(&cmd, &board, moves)) {
-            continue;
+        if (cmd.type == UNDO || cmd.type == REDO) {
+            /*do your thing*/
+        } else {
+            if (do_commands(&cmd, &board, moves)) {
+                pushToList(moves, creatCopiedBoard(board));
+            }
         }
-        /* Conmnand successded !*/
-        if (false && cmd.type != UNDO && cmd.type != REDO)
-        {
-
-            pushToList(moves, creatCopiedBoard(board));
 
         }
 
         printBoard(board);
 
-    }
-
     return true;
 }
+
 
 int play_game(){
 
