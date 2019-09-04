@@ -15,7 +15,6 @@
 #include "commands.h"
 
 
-int play_game();
 bool mainLoop();
 
 

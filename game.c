@@ -263,13 +263,17 @@ Board* creatCopiedBoard(Board* old_board){
     /*TODO: add fixed and such*/
     Board* new_board;
     int row, column, N;
+    Cell* src_cell;
+    Cell* dst_cell;
 
     new_board = createEmptyBoard(old_board->n, old_board->m);
     N = new_board->N;
 
     for(row=0; row<N; row++) {
         for (column = 0; column < N; column++) {
-            setVal(new_board, row, column, getCellValue(old_board, row, column));
+            src_cell = getCell(old_board, row, column);
+            dst_cell = getCell(new_board, row, column);
+            memcpy(dst_cell, src_cell, sizeof(Cell));
         }
     }
 

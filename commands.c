@@ -129,7 +129,7 @@ int doSetCommand(CMD* command,Board* board){
     return 1;
 }
 
-bool do_commands(CMD* command, Board** board_ptr, DubList* moves){
+bool do_commands(CMD* command, Board** board_ptr){
     Board* board;
 
     switch (command->type) {
@@ -185,22 +185,6 @@ bool do_commands(CMD* command, Board** board_ptr, DubList* moves){
                 printBoard(board);
             }
             break;
-
-        case UNDO:
-            printf("undo cmd\n");
-            if (doUndoCommand(moves))
-            {
-                return true;
-            }
-            return false;
-
-        case REDO:
-            printf("redo cmd\n");
-            if (doRedoCommand(moves))
-            {
-                return true;
-            }
-            return false;
 
         case SAVE:
             printf("save cmd\n");

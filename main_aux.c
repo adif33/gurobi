@@ -107,7 +107,6 @@ int pushToList(DubList* list, Board* boardPtr){
     if (current == NULL)
     {
         /*First element*/
-        printf("first elem \n");
         list->curr = newNode;
         newNode->prev = NULL;
     }   else {
@@ -210,7 +209,7 @@ bool mainLoop(){
         if (cmd.type == UNDO || cmd.type == REDO) {
             /*do your thing*/
         } else {
-            if (do_commands(&cmd, &board, moves)) {
+            if (do_commands(&cmd, &board)) {
                 pushToList(moves, creatCopiedBoard(board));
             }
         }
@@ -223,57 +222,3 @@ bool mainLoop(){
 }
 
 
-int play_game(){
-
-	int is_over = 0;
-    DubList dlist = {0};
-	DubList* moves = &dlist;
-
-
-	Board* old_board;
-    Board* new_board;
-    old_board = createEmptyBoard(3,3);
-    pushToList(moves,old_board);
-	printf("play game\n");
-	printBoard(old_board);
-	
-
-	while(1){
-		CMD cmd = {0};
-		char cmd_text[CMD_MAX_LENGTH + 1] = {0};
-		Board* board;
-
-		old_board = (moves->curr)->board;
-        new_board = creatCopiedBoard(old_board);
-
-
-		if (!get_command(cmd_text))
-		{
-			break;
-		}
-		if ( !parse_command(cmd_text, &cmd) )
-		{
-			continue;
-		} 
-		if (!do_commands(&cmd, &board, moves)) {
-			continue;
-		}
-		/* Conmnand successded !*/
-		if (cmd.type != UNDO && cmd.type != REDO)
-		{
-            pushToList(moves, creatCopiedBoard(board));
-		}
-
-		/*
-		 * TODO : if exiting remember to fre new_board
-		printf("oldd board %p \n",old_board);
-		printf("new board %p \n",new_board);
-		printList(moves);
-		*/
-		printBoard((moves->curr)->board);
-		
-	}
-
-	return is_over;
-
-}
