@@ -7,7 +7,7 @@ int main() {
     int status = 0;
     printf("Welcome to the Gurobi game ! \n");
 
-    status = play_game();
+    status = mainLoop();
 
     printf("exiting\n");
 

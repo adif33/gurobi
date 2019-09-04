@@ -209,14 +209,18 @@ bool mainLoop(){
         if (cmd.type == UNDO || cmd.type == REDO) {
             /*do your thing*/
         } else {
-            if (do_commands(&cmd, &board)) {
-                pushToList(moves, creatCopiedBoard(board));
+            if (!do_commands(&cmd, &board)) {
+                continue;
             }
+            /* command suceeded
+            pushToList(moves, creatCopiedBoard(board));
+            */
         }
-
-        }
-
         printBoard(board);
+
+        }
+
+
 
     return true;
 }

@@ -14,7 +14,6 @@ int doEditCommand(CMD* command, Board** board_ptr){
     printf("outside: %p\n", *board_ptr);
     printf("param x : %s \n", command->x);
 
-    printBoard(*board_ptr);
 
     return 1;
 }
@@ -97,7 +96,7 @@ int doExitCommand(CMD* command){
 
 
 
-int doSetCommand(CMD* command,Board* board){
+bool doSetCommand(CMD* command,Board* board){
 
     int x = -1;
     int y = -1;
@@ -115,7 +114,9 @@ int doSetCommand(CMD* command,Board* board){
 
     /* the params are numerical , check validity */
     /* Adi likes y,x instead of x,y */
-    checkRowColValid(board,y,x);
+    if (!checkRowColValid(board,y,x) ){
+        return 0;
+    }
     if (z > board->N || z <0 ){
         printf("Error: Parameter z value is illegal\n");
         return 0;
@@ -131,6 +132,11 @@ int doSetCommand(CMD* command,Board* board){
 
 bool do_commands(CMD* command, Board** board_ptr){
     Board* board;
+    /*
+     * WATCH THIS NEW LINE |
+     *                    \/
+     */
+    board = *board_ptr;
 
     switch (command->type) {
         case SOLVE:

@@ -11,7 +11,7 @@ int threeDimTo1d(int i,int j,int k, int dim) {
     return (i*dim*dim + j*dim + k);
 }
 
-int updateSolutionToBoard(Board* board,GRBmodel *model,int dim){
+bool updateSolutionToBoard(Board* board,GRBmodel *model,int dim){
     int i,j,k,tmp,tmp_index,error;
     double dtmp;
     for ( i = 0; i < dim; ++i) {
@@ -23,12 +23,25 @@ int updateSolutionToBoard(Board* board,GRBmodel *model,int dim){
                 if (error){
                     return error;
                 }
-                tmp = (int) dtmp;
-                if (tmp == 1){
-                    /*
-                    printf("i: %i,j:%i,k:%i val:%f \n",i,j,k,dtmp);
-                     */
-                    setVal(board,i,j,k+1);
+
+
+                if ((int) dtmp == 1){
+
+                    tmp = getCellValue(board,i,j);
+                    printf("i: %i,j:%i,k:%i val:%i \n",i,j,k,tmp);
+
+                    if (tmp != k+1 ) {
+                        if (tmp != 0){
+                            printf("Error: bad solution \n");
+                            return 1;
+                        }
+                        if (setVal(board,i,j,k+1) == false ){
+                            printf("Error: problem updating board\n");
+                            return 1;
+                        }
+
+                    }
+
                 }
             }
         }
@@ -82,7 +95,7 @@ Board* solveBoard(Board* board){
         for (j = 0; j <N ; j++) {
             for (k = 0; k <N ; k++) {
 
-                if (getCellValue(board,i,j) - 1  == k && k!= 0 ){
+                if (getCellValue(board,i,j) - 1  == k  ){
                     /*
                     printf("i=%i,j=%i,k=%i \n",i,j,k);
                     printf("index is: %i \n",threeDimTo1d(i,j,k,N));
