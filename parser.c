@@ -43,10 +43,11 @@ int get_command(char* text_cmd){
 
 }
 
-int parse_command(char* text, CMD* command){
+bool parse_command(char* text, CMD* command,Board* board){
 	char* par;
 	int i =0 ;
 	int argsNum = 0;
+	bool wrongMode = false;
 
 	char* type ;
 
@@ -69,6 +70,9 @@ int parse_command(char* text, CMD* command){
 	} else if (strcmp(type, "set") == 0) {
         command->type = SET;
         argsNum = 3;
+        if (board->curr_mode == init ){
+            wrongMode = true;
+        }
     } else if (strcmp(type, "validate") == 0) {
         command->type = VALIDATE;
         argsNum = 0;
@@ -107,9 +111,13 @@ int parse_command(char* text, CMD* command){
         argsNum = 0;
     } else {
     	printf("invalid cmd\n");
-    	return 0;
+    	return false;
 
     }
+	if (wrongMode){
+	    printf("invalid cmd (mode) \n");
+        return false;
+	}
 
     par = strtok(NULL," \n"); 
     while( par != NULL && i <= 3) {

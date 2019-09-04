@@ -8,9 +8,7 @@
 
 int get_command(char* text_cmd);
 
-int parse_command(char* text, CMD* command);
-
-
+bool parse_command(char* text, CMD* command,Board* board);
 
 
 

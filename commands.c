@@ -49,19 +49,27 @@ int doGenerateCommand(CMD* command){
     printf("param y : %s \n", command->y);
     return 1;
 }
-int doUndoCommand(DubList* list){
+bool doUndoCommand(DubList* list,Board** board_ptr){
+    Board* board = *board_ptr;
     if (goStepBack(list) )
     {
-        return 1;
+        printf("freeing board %p \n",(void*) board);
+        freeBoard(board);
+        *board_ptr = creatCopiedBoard((list->curr)->board);
+        return true;
     }
-    return 0;
+    return false;
 }
-int doRedoCommand(DubList* list){
+bool doRedoCommand(DubList* list,Board** board_ptr){
+    Board* board = *board_ptr;
     if (goStepForward(list) )
     {
-        return 1;
+        printf("freeing board %p \n",(void*) board);
+        freeBoard(board);
+        *board_ptr = creatCopiedBoard((list->curr)->board);
+        return true;
     }
-    return 0;
+    return false;
 }
 int doSaveCommand(CMD* command){
     printf("param x : %s \n", command->x);
@@ -89,8 +97,8 @@ int doResetCommand(CMD* command){
     printf("param x : %s \n", command->x);
     return 1;
 }
-int doExitCommand(CMD* command){
-    printf("param x : %s \n", command->x);
+bool doExitCommand(CMD* command,DubList* moves){
+    moves->isOver = true;
     return 1;
 }
 
@@ -130,7 +138,7 @@ bool doSetCommand(CMD* command,Board* board){
     return 1;
 }
 
-bool do_commands(CMD* command, Board** board_ptr){
+bool do_commands(CMD* command, Board** board_ptr,DubList* moves){
     Board* board;
     /*
      * WATCH THIS NEW LINE |
@@ -192,6 +200,21 @@ bool do_commands(CMD* command, Board** board_ptr){
             }
             break;
 
+        case UNDO:
+            printf("undo cmd\n");
+            if (doUndoCommand(moves,board_ptr))
+            {
+                return true;
+            }
+            return false;
+        case REDO:
+            printf("redo cmd\n");
+            if (doRedoCommand(moves,board_ptr))
+            {
+                return true;
+            }
+            return false;
+
         case SAVE:
             printf("save cmd\n");
             if (doSaveCommand(command))
@@ -241,13 +264,12 @@ bool do_commands(CMD* command, Board** board_ptr){
             break;
         case EXIT:
             printf("Exit cmd\n");
-            if (doExitCommand(command))
-            {
-                printBoard(board);
-            }
-            break;
+            doExitCommand(command,moves);
+            return false;
+
 
     }
+
     return true;
 
 }

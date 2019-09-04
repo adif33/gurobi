@@ -15,6 +15,7 @@ struct node {
 
 typedef struct dublist {
     Node* curr;
+    bool isOver;
 } DubList;
 
 typedef enum cmdtype {
@@ -49,6 +50,6 @@ typedef struct {
 } CMD;
 
 
-bool do_commands(CMD* command, Board** board_ptr);
+bool do_commands(CMD* command, Board** board_ptr,DubList* list);
 
 #endif

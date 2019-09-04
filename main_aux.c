@@ -160,12 +160,12 @@ int goStepForward(DubList* list){
     }
 }
 
-int freeList(DubList* list){
+bool freeList(DubList* list){
     Node* node = list->curr;
     Node* tmp;
 
     if (node == NULL){
-        return 1;
+        return true;
     }
 
     /*Go back all the way*/
@@ -180,49 +180,56 @@ int freeList(DubList* list){
     /*free all next nodes*/
     list->curr = NULL;
     freeNextNodes(node);
-    return 1;
+    return true;
 }
 
 /*douly linked list end*/
 
 bool mainLoop(){
-    Board* board;
     DubList dlist = {0};
     DubList* moves = &dlist;
-
+    Board* board = createInitBoard();
     CMD cmd = {0};
     char cmd_text[CMD_MAX_LENGTH + 1] = {0};
+
+    /* TODO: remove this line and change createInitBoard function */
+    board->curr_mode = init;
 
 
     while (true){
 
-        if (!get_command(cmd_text))
+        if (moves->isOver || !get_command(cmd_text) )
         {
             break;
         }
 
-        if (!parse_command(cmd_text, &cmd))
+        if (!parse_command(cmd_text, &cmd, board))
         {
             continue;
         }
 
-        if (cmd.type == UNDO || cmd.type == REDO) {
-            /*do your thing*/
-        } else {
-            if (!do_commands(&cmd, &board)) {
-                continue;
-            }
-            /* command suceeded
+        if (!do_commands(&cmd, &board,moves))
+        {
+            continue;
+        }
+        if (cmd.type != UNDO && cmd.type != REDO)
+        {
             pushToList(moves, creatCopiedBoard(board));
-            */
         }
+
+        /*
+        printList(moves);
+        printf("board is: %p \n",(void*)board);
+        */
         printBoard(board);
-
         }
 
+    freeBoard(board);
+    if (freeList(moves)){
+        return true;
+    }
+    return false;
 
-
-    return true;
 }
 
 
