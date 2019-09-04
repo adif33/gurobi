@@ -118,17 +118,17 @@ int parse_command(char* text, CMD* command){
     	*/
 		switch(i) {
 			case 0 :
-				(&(command->args))->x = par;
+				command->x = par;
 				par = strtok(NULL," \n"); 
 				i++;
 				continue; 
 			case 1 :
-				(&(command->args))->y = par;
+				command->y = par;
 				par = strtok(NULL," \n"); 
 				i++;
 				continue; 
 			case 2 :
-				(&(command->args))->z = par;
+				command->z = par;
 				par = strtok(NULL," \n"); 
 				i++;
 				continue; 

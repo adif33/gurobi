@@ -4,15 +4,15 @@
 
 int doSolveCommand(CMD* command, Board* board){
     printf("solv cmd\n");
-    printf("param x : %s \n", (&(command->args))->x);
+    printf("param x : %s \n", command->x);
     return 1;
 }
 
 int doEditCommand(CMD* command, Board** board_ptr){
-    printf("param x : %s \n", (&(command->args))->x);
-    *board_ptr = loadBoard((&(command->args))->x);
+    printf("param x : %s \n", command->x);
+    *board_ptr = loadBoard(command->x);
     printf("outside: %p\n", *board_ptr);
-    printf("param x : %s \n", (&(command->args))->x);
+    printf("param x : %s \n", command->x);
 
     printBoard(*board_ptr);
 
@@ -25,7 +25,7 @@ int doMarkErrorsCommand(CMD* command,Board* board){
     if (!convertCommandToInt(command,1)){
         return 0;
     }
-    x = (&(command->args))->x_int;
+    x = command->x_int;
 
     /* check params validity */
     if (x > 1 || x <0 ){
@@ -37,17 +37,17 @@ int doMarkErrorsCommand(CMD* command,Board* board){
     return 1;
 }
 int doValidateCommand(CMD* command){
-    printf("param x : %s \n", (&(command->args))->x);
+    printf("param x : %s \n", command->x);
     return 1;
 }
 int doGuessCommand(CMD* command){
-    printf("param x : %s \n", (&(command->args))->x);
+    printf("param x : %s \n", command->x);
     printf("test\n");
     return 1;
 }
 int doGenerateCommand(CMD* command){
-    printf("param x : %s \n", (&(command->args))->x);
-    printf("param y : %s \n", (&(command->args))->y);
+    printf("param x : %s \n", command->x);
+    printf("param y : %s \n", command->y);
     return 1;
 }
 int doUndoCommand(DubList* list){
@@ -65,33 +65,33 @@ int doRedoCommand(DubList* list){
     return 0;
 }
 int doSaveCommand(CMD* command){
-    printf("param x : %s \n", (&(command->args))->x);
+    printf("param x : %s \n", command->x);
     return 1;
 }
 int doHintCommand(CMD* command){
-    printf("param x : %s \n", (&(command->args))->x);
-    printf("param y : %s \n", (&(command->args))->y);
+    printf("param x : %s \n", command->x);
+    printf("param y : %s \n", command->y);
     return 1;
 }
 int doGuessHintCommand(CMD* command){
-    printf("param x : %s \n", (&(command->args))->x);
-    printf("param y : %s \n", (&(command->args))->y);
+    printf("param x : %s \n", command->x);
+    printf("param y : %s \n", command->y);
     return 1;
 }
 int doNumSolutionsCommand(CMD* command){
-    printf("param x : %s \n", (&(command->args))->x);
+    printf("param x : %s \n", command->x);
     return 1;
 }
 int doAutofillCommand(CMD* command){
-    printf("param x : %s \n", (&(command->args))->x);
+    printf("param x : %s \n", command->x);
     return 1;
 }
 int doResetCommand(CMD* command){
-    printf("param x : %s \n", (&(command->args))->x);
+    printf("param x : %s \n", command->x);
     return 1;
 }
 int doExitCommand(CMD* command){
-    printf("param x : %s \n", (&(command->args))->x);
+    printf("param x : %s \n", command->x);
     return 1;
 }
 
@@ -107,9 +107,9 @@ int doSetCommand(CMD* command,Board* board){
     if (!convertCommandToInt(command,3)){
         return 0;
     }
-    x = (&(command->args))->x_int;
-    y = (&(command->args))->y_int;
-    z = (&(command->args))->z_int;
+    x = command->x_int;
+    y = command->y_int;
+    z = command->z_int;
 
     printf("x = %i ,y = %i ,z = %i \n",x,y,z);
 

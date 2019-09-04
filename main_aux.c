@@ -12,35 +12,35 @@ int convertCommandToInt(CMD* command,int argsNum){
     int z = -1;
     char *endptr;
 
-    x = strtol((&(command->args))->x,&endptr, 10);
-    if (endptr == (&(command->args))->x )
+    x = strtol(command->x,&endptr, 10);
+    if (endptr == command->x )
     {
         printf(PARAMETER_X_CONVERSION_ERROR);
         return 0;
     }
-    (&(command->args))->x_int = x;
+    command->x_int = x;
     if (argsNum == 1){
         return 1;
     }
 
-    y = strtol((&(command->args))->y,&endptr, 10);
-    if (endptr == (&(command->args))->y )
+    y = strtol(command->y,&endptr, 10);
+    if (endptr == command->y )
     {
         printf(PARAMETER_Y_CONVERSION_ERROR);
         return 0;
     }
-    (&(command->args))->y_int = y;
+    command->y_int = y;
     if (argsNum == 2){
         return 1;
     }
 
-    z = strtol((&(command->args))->z,&endptr, 10);
-    if (endptr == (&(command->args))->z )
+    z = strtol(command->z,&endptr, 10);
+    if (endptr == command->z )
     {
         printf(PARAMETER_Z_CONVERSION_ERROR);
         return 0;
     }
-    (&(command->args))->z_int = z;
+    command->z_int = z;
     return 1;
 }
 
