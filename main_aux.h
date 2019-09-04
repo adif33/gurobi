@@ -14,16 +14,6 @@
 #include "loader.h"
 #include "commands.h"
 
-typedef struct node Node;
-struct node {
-    Board* board;
-    Node* next;
-    Node* prev;
-} ;
-
-typedef struct dublist {
-    Node* curr;
-} DubList;
 
 int play_game();
 bool mainLoop();
