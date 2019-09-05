@@ -82,22 +82,22 @@ bool doSaveCommand(CMD* command, Board** board_ptr){
     /*TODO: handle errors in saveBoard*/
     printf("param x : %s \n", command->x);
     if((*board_ptr)->curr_mode != edit && (*board_ptr)->curr_mode != solve){
-        printf("ERROR: wrong mode");
+        printf("ERROR: wrong mode\n");
         return false;
     }
 
     if(!command->x){
-        printf("ERROR: no x value");
+        printf("ERROR: no x value\n");
         return false;
     }
 
     if ((*board_ptr)->curr_mode == edit){
         if (isErroneous(*board_ptr)){
-            printf("ERROR: Board is Erroneous in edit mode");
+            printf("ERROR: Board is Erroneous in edit mode\n");
             return false;
         }
         if (getNumberOfSolution(*board_ptr)<1){
-            printf("ERROR: No possible solutions in edit mode");
+            printf("ERROR: No possible solutions in edit mode\n");
             return false;
         }
     }
@@ -115,9 +115,22 @@ int doGuessHintCommand(CMD* command){
     printf("param y : %s \n", command->y);
     return 1;
 }
-int doNumSolutionsCommand(CMD* command){
-    printf("param x : %s \n", command->x);
-    return 1;
+bool doNumSolutionsCommand(CMD* command, Board** board_ptr){
+    int number;
+    if((*board_ptr)->curr_mode != edit && (*board_ptr)->curr_mode != solve){
+        printf("ERROR: wrong mode\n");
+        return false;
+    }
+
+    if (isErroneous(*board_ptr)){
+        printf("ERROR: Board is Erroneous\n");
+        return false;
+    }
+
+    number = getNumberOfSolution(*board_ptr);
+    printf("Number of solutions: %d\n", number);
+
+    return false; /*we didnt change the board so we dont want to update dublist*/
 }
 int doAutofillCommand(CMD* command){
     printf("param x : %s \n", command->x);
@@ -270,7 +283,7 @@ bool do_commands(CMD* command, Board** board_ptr,DubList* moves){
 
         case NUM_SOLUTIONS:
             printf("NumSolutions cmd\n");
-            if (doNumSolutionsCommand(command))
+            if (doNumSolutionsCommand(command, board_ptr))
             {
                 printBoard(board);
             }
