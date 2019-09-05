@@ -115,7 +115,6 @@ int getNumberOfSolution(Board* board){
         } else{
             if (row==N-1 && column==N-1){
                 counter++;
-                printBoard(curr_board);
                 freeBoard(curr_board);
                 free(curr_stackItem);
                 continue;

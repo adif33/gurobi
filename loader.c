@@ -41,7 +41,6 @@ char* createSavedBoardText(Board* board){
             len += sprintf(text + len, "\n");
         }
     }
-    printf("text:\n%s\n$$$$", text);
 
     return text;
 }

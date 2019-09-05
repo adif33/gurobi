@@ -185,6 +185,15 @@ bool freeList(DubList* list){
 
 /*douly linked list end*/
 
+void clearCMD(CMD* cmd){
+    cmd->x = '\0';
+    cmd->y = '\0';
+    cmd->z = '\0';
+    cmd->x_int = -1;
+    cmd->y_int = -1;
+    cmd->z_int = -1;
+}
+
 bool mainLoop(){
     DubList dlist = {0};
     DubList* moves = &dlist;
@@ -197,6 +206,7 @@ bool mainLoop(){
 
 
     while (true){
+        clearCMD(&cmd);
 
         if (moves->isOver || !get_command(cmd_text) )
         {

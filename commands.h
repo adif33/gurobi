@@ -4,6 +4,8 @@
 #include "game.h"
 #include "loader.h"
 #include "main_aux.h"
+#include "logic.h"
+#include "solver.h"
 
 
 typedef struct node Node;

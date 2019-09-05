@@ -2,17 +2,24 @@
 
 
 
-int doSolveCommand(CMD* command, Board* board){
-    printf("solv cmd\n");
-    printf("param x : %s \n", command->x);
+int doSolveCommand(CMD* command, Board** board_ptr){
+    freeBoard(*board_ptr);
+
+    *board_ptr = loadBoard(command->x);
+    (*board_ptr)->curr_mode = solve;
+
     return 1;
 }
 
 int doEditCommand(CMD* command, Board** board_ptr){
+    /*TODO: handle errors in loadBoard*/
     printf("param x : %s \n", command->x);
-    *board_ptr = loadBoard(command->x);
-    printf("outside: %p\n", *board_ptr);
-    printf("param x : %s \n", command->x);
+    freeBoard(*board_ptr);
+    if(!command->x){
+        *board_ptr = createInitBoard();
+    } else{
+        *board_ptr = loadBoard(command->x);
+    }
 
 
     return 1;
@@ -71,9 +78,32 @@ bool doRedoCommand(DubList* list,Board** board_ptr){
     }
     return false;
 }
-int doSaveCommand(CMD* command){
+bool doSaveCommand(CMD* command, Board** board_ptr){
+    /*TODO: handle errors in saveBoard*/
     printf("param x : %s \n", command->x);
-    return 1;
+    if((*board_ptr)->curr_mode != edit && (*board_ptr)->curr_mode != solve){
+        printf("ERROR: wrong mode");
+        return false;
+    }
+
+    if(!command->x){
+        printf("ERROR: no x value");
+        return false;
+    }
+
+    if ((*board_ptr)->curr_mode == edit){
+        if (isErroneous(*board_ptr)){
+            printf("ERROR: Board is Erroneous in edit mode");
+            return false;
+        }
+        if (getNumberOfSolution(*board_ptr)<1){
+            printf("ERROR: No possible solutions in edit mode");
+            return false;
+        }
+    }
+    saveBoard(*board_ptr, command->x);
+
+    return true;
 }
 int doHintCommand(CMD* command){
     printf("param x : %s \n", command->x);
@@ -148,8 +178,7 @@ bool do_commands(CMD* command, Board** board_ptr,DubList* moves){
 
     switch (command->type) {
         case SOLVE:
-            doSolveCommand(command, board);
-            printBoard(board);
+            doSolveCommand(command, board_ptr);
             break;
 
         case EDIT:
@@ -217,7 +246,7 @@ bool do_commands(CMD* command, Board** board_ptr,DubList* moves){
 
         case SAVE:
             printf("save cmd\n");
-            if (doSaveCommand(command))
+            if (doSaveCommand(command, board_ptr))
             {
                 printBoard(board);
             }
