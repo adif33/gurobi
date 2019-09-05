@@ -12,6 +12,7 @@
 
 
 void setErroneous(Board* board);
+bool isErroneous(Board* board);
 
 bool isBoardSolved(Board* board);
 
