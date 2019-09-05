@@ -56,9 +56,8 @@ bool isErroneous(Board* board){
         for(column=0; column<N; column++){
             curr_cell = getCell(board, row, column);
             if (curr_cell->erroneous){
-                return ture;
+                return true;
             }
-
         }
     }
     return false;
