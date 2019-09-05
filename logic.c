@@ -50,21 +50,18 @@ bool isErroneous(Board* board){
     Cell* curr_cell;
 
     setErroneous(board);
-
-
-
     N = board->N;
 
     for(row=0; row<N; row++){
         for(column=0; column<N; column++){
             curr_cell = getCell(board, row, column);
             if (curr_cell->erroneous){
-                return false;
+                return ture;
             }
 
         }
     }
-    return true;
+    return false;
 
 }
 
