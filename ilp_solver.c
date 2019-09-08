@@ -1,11 +1,5 @@
-#include <stdio.h>
-#include <string.h>
-
-#include "game.h"
+#include "ilp_solver.h"
 #include "gurobi_c.h"
-
-
-
 
 int threeDimTo1d(int i,int j,int k, int dim) {
     return (i*dim*dim + j*dim + k);
@@ -24,12 +18,12 @@ bool updateSolutionToBoard(Board* board,GRBmodel *model,int dim){
                     return error;
                 }
 
-
                 if ((int) dtmp == 1){
 
                     tmp = getCellValue(board,i,j);
+                    /*
                     printf("i: %i,j:%i,k:%i val:%i \n",i,j,k,tmp);
-
+                    */
                     if (tmp != k+1 ) {
                         if (tmp != 0){
                             printf("Error: bad solution \n");
@@ -39,9 +33,7 @@ bool updateSolutionToBoard(Board* board,GRBmodel *model,int dim){
                             printf("Error: problem updating board\n");
                             return 1;
                         }
-
                     }
-
                 }
             }
         }
@@ -51,12 +43,95 @@ bool updateSolutionToBoard(Board* board,GRBmodel *model,int dim){
 
 
 
+int addConstEachCellSingleValue(GRBmodel *model,int N,int* ind,double* val){
+    int k,i,j,error ;
+
+    for (i = 0; i < N; i++) {
+        for (j = 0; j < N; j++) {
+            for (k = 0; k < N; k++) {
+                ind[k] = threeDimTo1d(i,j,k,N);
+                val[k] = 1.0;
+            }
+
+            error = GRBaddconstr(model, N, ind, val, GRB_EQUAL, 1.0, NULL);
+            if (error) return error;
+        }
+    }
+
+    return 0;
+}
+
+int addConstEachRowValue(GRBmodel *model,int N,int* ind,double* val){
+    int k,i,j,error ;
+
+    for (k = 0; k < N; k++) {
+        for (i = 0; i < N; i++) {
+            for (j = 0; j < N; j++) {
+                ind[j] = threeDimTo1d(i,j,k,N);
+                val[j] = 1.0;
+            }
+
+            error = GRBaddconstr(model, N, ind, val, GRB_EQUAL, 1.0, NULL);
+            if (error) return error;
+        }
+    }
+
+    return 0;
+}
+
+int addConstEachColumnValue(GRBmodel *model,int N,int* ind,double* val){
+    int k,i,j,error ;
+
+    for (k = 0; k < N; k++) {
+        for (j = 0; j < N; j++) {
+            for (i = 0; i < N; i++) {
+                ind[i] = threeDimTo1d(i,j,k,N);
+                val[i] = 1.0;
+            }
+
+            error = GRBaddconstr(model, N, ind, val, GRB_EQUAL, 1.0, NULL);
+            if (error) return error;
+        }
+    }
+
+    return 0;
+}
+
+int addConstEachBlockValue(GRBmodel *model,int N,int* ind,double* val,int n, int m){
+    int k,i,j,ib,jb,tmp_index,error ;
+
+    for (k = 0;  k<N ; ++k) {
+        for (ib = 0; ib < n ;++ib) {
+            for (jb = 0;  jb<m ; jb++) {
+                tmp_index = 0;
+                for (i = ib*m; i <(ib*m + m) ; i++) {
+                    for (j = jb*n;  j<(jb*n + n)  ; j++) {
+                        /*
+                         printf("i:%i,j:%i k:%i,tmp =%i \n",i,j,k,tmp_index);
+                         */
+                         ind[tmp_index] = threeDimTo1d(i,j,k,N);
+                         val[tmp_index] = 1.0;
+                         tmp_index +=1;
+                     }
+                 }
+                 error = GRBaddconstr(model, N, ind, val, GRB_EQUAL, 1.0, NULL);
+                if (error) return error;
+             }
+
+         }
+     }
+
+    return 0;
+}
+
+
+
  /*
   * Treats every cell with value != 0 as fixed
   * regardless to the fixed bool value
   * because it will run on a newly created boards
   * */
-Board* solveBoard(Board* board){
+void solveBoard(Board* board,Solution* sol){
 
     /* Create an empty model */
     GRBenv   *env   = NULL;
@@ -67,7 +142,7 @@ Board* solveBoard(Board* board){
     int N = board->N;
     int n = board->n;
     int m = board->m;
-    int i ,j, k,ib,jb,tmp_lower_bound, tmp_index;
+    int i ,j, k,tmp_lower_bound, tmp_index;
     double* lb;
     double* val;
     int* ind;
@@ -75,12 +150,8 @@ Board* solveBoard(Board* board){
     char** names;
     int error = 0;
     int       optimstatus;
-    double    objval;
+    sol->error =0;
 
-    printf("solve board\n");
-    printf("n is : %i, m is: %i \n",board->n,board->m);
-
-    printf("size %i \n",(2*3 + 6)*(N*N*N));
 
     namestorage =   calloc((2*3 + 6)*(N*N*N), sizeof(char) );
     lb          =   calloc(N*N*N, sizeof(double));
@@ -120,125 +191,73 @@ Board* solveBoard(Board* board){
     error = GRBloadenv(&env, "sudoku.log");
     if (error) goto QUIT;
 
+     /*Turm off printing to console*/
+     error = GRBsetintparam(env, GRB_INT_PAR_LOGTOCONSOLE, 0);
+     if (error) goto QUIT;
 
     /* Create new model */
     error = GRBnewmodel(env, &model, "sudoku", N*N*N, NULL, lb, NULL,vtype, names);
     if (error) goto QUIT;
 
+    /* Each cell gets a value     */
+    addConstEachCellSingleValue(model,N,ind,val);
 
-    /* Each cell gets a value */
-
-    for (i = 0; i < N; i++) {
-        for (j = 0; j < N; j++) {
-            for (k = 0; k < N; k++) {
-                ind[k] = threeDimTo1d(i,j,k,N);
-                val[k] = 1.0;
-            }
-
-            error = GRBaddconstr(model, N, ind, val, GRB_EQUAL, 1.0, NULL);
-            if (error) goto QUIT;
-        }
-    }
-
-    /* Each value must appear once in each row */
-
-    for (k = 0; k < N; k++) {
-        for (j = 0; j < N; j++) {
-            for (i = 0; i < N; i++) {
-                ind[i] = threeDimTo1d(i,j,k,N);
-                val[i] = 1.0;
-            }
-
-            error = GRBaddconstr(model, N, ind, val, GRB_EQUAL, 1.0, NULL);
-            if (error) goto QUIT;
-        }
-    }
+    /* Each value must appear once in each row    */
+    addConstEachRowValue(model,N,ind,val);
 
     /* Each value must appear once in each column */
-    for (k = 0; k < N; k++) {
-        for (i = 0; i < N; i++) {
-            for (j = 0; j < N; j++) {
-                ind[j] = threeDimTo1d(i,j,k,N);
-                val[j] = 1.0;
-            }
-
-            error = GRBaddconstr(model, N, ind, val, GRB_EQUAL, 1.0, NULL);
-            if (error) goto QUIT;
-        }
-    }
+    addConstEachColumnValue(model,N,ind,val);
 
     /* Each value must appear once in each subgrid */
-     for (k = 0;  k<N ; ++k) {
-         for (ib = 0; ib < n ;++ib) {
-             for (jb = 0;  jb<m ; jb++) {
-                 tmp_index = 0;
-                 for (i = ib*m; i <(ib*m + m) ; i++) {
-                     for (j = jb*n;  j<(jb*n + n)  ; j++) {
-                        /*
-                         printf("i:%i,j:%i k:%i,tmp =%i \n",i,j,k,tmp_index);
-                         */
-                         ind[tmp_index] = threeDimTo1d(i,j,k,N);
-                         val[tmp_index] = 1.0;
-                         tmp_index +=1;
-                     }
-                 }
-                 error = GRBaddconstr(model, N, ind, val, GRB_EQUAL, 1.0, NULL);
-                 if (error) goto QUIT;
-             }
-
-         }
-     }
-
+    addConstEachBlockValue(model,N,ind,val,n,m);
 
 
 
     /* Optimize model */
-
     error = GRBoptimize(model);
     if (error) goto QUIT;
 
     /* Write model to 'sudoku.lp' */
-
     error = GRBwrite(model, "sudoku.lp");
     if (error) goto QUIT;
 
     /* Capture solution information */
-
     error = GRBgetintattr(model, GRB_INT_ATTR_STATUS, &optimstatus);
     if (error) goto QUIT;
 
-    error = GRBgetdblattr(model, GRB_DBL_ATTR_OBJVAL, &objval);
-    if (error) goto QUIT;
-
-    printf("\nOptimization complete\n");
     if (optimstatus == GRB_OPTIMAL) {
-        printf("Optimal objective: %.4e\n", objval);
-        error = updateSolutionToBoard(board,model,N);
-        if (error) goto QUIT;
+        /*
+        printf("Optimal objective\n");
+         */
+        sol->solved = true;
+        if (sol->stat == generate){
+            error = updateSolutionToBoard(board,model,N);
+            if (error) goto QUIT;
+        }
+    }
+    else
+    {
+        /*
+        printf("Model is infeasible or unbounded\n");
+         */
+        sol->solved = false;
+
     }
 
-    else if (optimstatus == GRB_INF_OR_UNBD)
-     printf("Model is infeasible or unbounded\n");
-    else
-     printf("Optimization was stopped early\n");
-    printf("\n");
 
     QUIT:
     /* Error reporting */
 
     if (error) {
      printf("ERROR: %s\n", GRBgeterrormsg(env));
-     return NULL;
+     sol->error = error;
     }
 
     /* Free model */
-
     GRBfreemodel(model);
 
     /* Free environment */
-
     GRBfreeenv(env);
-
 
     /* Free callocs */
     free(namestorage);
@@ -247,7 +266,224 @@ Board* solveBoard(Board* board){
     free(names);
 
 
+}
 
-    return board;
+bool validateBoard(Board* board){
 
+    Solution sol = {0};
+
+    solveBoard(board,&sol);
+
+    if (sol.error == 0){
+        if (sol.solved){
+            printf("Board is valid ! \n");
+        } else {
+            printf("Board is not valid ! \n");
+        }
+        return true;
+    }
+    return false;
+
+}
+
+int countEmptyCells(Board* board){
+    int  i,j;
+    int N = board->N;
+    int count =0;
+
+    for ( i = 0; i <N ; ++i) {
+        for (j = 0; j <N ; ++j) {
+            if (getCellValue(board,i,j) == 0){
+                count +=1;
+            }
+        }
+    }
+    return count;
+}
+
+int countRemovableCells(Board* board){
+    int  i,j;
+    int N = board->N;
+    int count =0;
+
+    for ( i = 0; i <N ; ++i) {
+        for (j = 0; j <N ; ++j) {
+            if (!isCellFixed(board,i,j)){
+                count +=1;
+            }
+        }
+    }
+    return count;
+}
+bool setRandomLegalValue(Board* board,int row, int col ){
+    bool* values;
+    int i ,index,count;
+    int N = board->N;
+    count = N;
+
+
+    values = calloc(N + 1, sizeof(bool));
+
+    count = detectLegalValues(board,row,col,values);
+
+    /* print legal values:
+     *
+    printf("legal values(%i):  \n",count);
+
+    for ( i = 1; i < N+1 ; ++i) {
+        if (values[i] == true){
+            printf(" %i ,",i);
+        }
+    }
+    printf("\n");
+     */
+    if (count == 0){
+        /*
+        printf("Error: No legal values available \n");
+         */
+        return false;
+    }
+
+    index = rand() % (count ) + 1 ;
+
+    for ( i = 0; i < N+1 ; ++i) {
+        if (values[i] == true){
+            index -=1;
+            if (index == 0){
+                setVal(board,row,col,i);
+                break;
+            }
+        }
+    }
+    free(values);
+    return true;
+}
+
+bool setNthEmptyCell(Board* board,int n) {
+    int i, j;
+    int N = board->N;
+    int count = 0;
+
+    for (i = 0; i < N; ++i) {
+        for (j = 0; j < N; ++j) {
+            if (getCellValue(board, i, j) == 0) {
+                count += 1;
+                if (count == n) {
+                    return setRandomLegalValue(board,i,j);
+                }
+            }
+        }
+    }
+    return false;
+}
+
+bool removeNthCell(Board* board,int n) {
+    int i, j, val;
+    bool fixed ;
+    int N = board->N;
+    int count = 0;
+
+    for (i = 0; i < N; ++i) {
+        for (j = 0; j < N; ++j) {
+            val =getCellValue(board, i, j) ;
+            fixed = isCellFixed(board,i,j);
+            if ( val != 0 && fixed == false ) {
+                count += 1;
+                if (count == n) {
+                    return setVal(board,i,j,0);
+                }
+            }
+        }
+    }
+    return false;
+}
+
+bool tryToFillBoard(Board* board, int cellsToFill){
+    int i, emptyCells, index ;
+    emptyCells =countEmptyCells(board);
+
+    for ( i = 0; i < cellsToFill; ++i) {
+        index = rand() % (emptyCells ) + 1 ;
+        if (!setNthEmptyCell(board,index)){
+            return false;
+        }
+        emptyCells -=1;
+    }
+    return true;
+
+}
+
+
+bool removeYRandomCells(Board* board,int cellsToRemove){
+    int  i, removableCells, index ;
+    removableCells =countRemovableCells(board);
+
+    for ( i = 0; i < cellsToRemove; ++i) {
+        index = rand() % (removableCells ) + 1 ;
+        if (!removeNthCell(board,index)){
+            return false;
+        }
+        removableCells -=1;
+    }
+    return true;
+
+}
+
+bool generateBoard(Board** board_ptr,int cellsToFill, int cellsToRemove ){
+    int i,emptyCells, removableCells;
+    Board* board ;
+    Board* copy ;
+    Solution sol = {0};
+    sol.stat = generate;
+    board = *board_ptr;
+    srand(time(NULL));
+
+    emptyCells =countEmptyCells(board);
+
+    if ( emptyCells < cellsToFill ){
+        printf("Error: number of empty cells is insufficient \n");
+        return false;
+    }
+
+    removableCells = countRemovableCells(board);
+    if ( removableCells < cellsToRemove ){
+        printf("Error: number of removable cells is insufficient \n");
+        return false;
+    }
+
+    for (i = 0; i < GENERATE_CMD_NUM_RETRYS ; ++i) {
+
+        copy = creatCopiedBoard(board);
+        printf("created copy %p \n",(void*)copy);
+
+        if (!tryToFillBoard(copy,cellsToFill)){
+            freeBoard(copy);
+            continue;
+        }
+
+        solveBoard(copy,&sol );
+        if (sol.error){
+            return false;
+        }
+        if (!sol.solved){
+            freeBoard(copy);
+            continue;
+        }
+        break;
+    }
+
+    if (i == GENERATE_CMD_NUM_RETRYS ){
+        printf("Error: generation failed after %i times \n",GENERATE_CMD_NUM_RETRYS);
+        return false;
+    }
+
+    if (!removeYRandomCells(copy,cellsToRemove)){
+        printf("Error: failed removing cells \n");
+        return false;
+
+    }
+    freeBoard(board);
+    *board_ptr = copy;
+
+    return true;
 }

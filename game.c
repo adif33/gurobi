@@ -8,6 +8,7 @@ void freeBoard(Board* board){
     int row, column;
     Cell* curr_cell;
 
+    printf("freeing board %p \n",(void*)board);
     for(row=0; row<board->N; row++){
         curr_cell = getCell(board, row, 0);
         free(curr_cell);
