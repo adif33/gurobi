@@ -560,6 +560,7 @@ bool guessBoard(Board* board, double threshold){
     }
     if (!sol.solved){
         printf("Error: could not solve board \n");
+        return false;
     }
     return true;
 
