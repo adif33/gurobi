@@ -195,14 +195,16 @@ bool doGuessCommand(CMD* command,Board* board){
     double thres ;
     int error ;
 
-    printf("param x : %s \n", command->x);
-
     error = sscanf(command->x,"%lf",&thres);
     if (error == 0){
         printf("Error: Parameter x is not a double\n");
         return false;
     }
 
+    if (isErroneous(board)){
+        printf("Error: Board is erroneous\n");
+        return false;
+    }
     return guessBoard(board,thres);
 }
 bool doGenerateCommand(CMD* command,Board** board_ptr){
@@ -267,10 +269,35 @@ int doHintCommand(CMD* command){
     printf("param y : %s \n", command->y);
     return 1;
 }
-int doGuessHintCommand(CMD* command){
-    printf("param x : %s \n", command->x);
-    printf("param y : %s \n", command->y);
-    return 1;
+bool doGuessHintCommand(CMD* command,Board* board){
+    int x,y;
+    /* convert params to int */
+    if (!convertCommandToInt(command,2)){
+        return false;
+    }
+    x = command->x_int-1;
+    y = command->y_int-1;
+
+    /* the params are numerical , check validity */
+    /* Adi likes y,x instead of x,y */
+    if (!checkRowColValid(board,y,x) ){
+        return false;
+    }
+
+    if (isErroneous(board)){
+        printf("Error: Board is erroneous\n");
+        return false;
+    }
+
+    if (isCellFixed(board,y,x)){
+        printf("Error: Cell is fixed\n");
+        return false;
+    }
+    if (getCellValue(board,y,x) !=  0){
+        printf("Error: Cell is not empty\n");
+        return false;
+    }
+    return hintGuess(board,y,x);
 }
 bool doNumSolutionsCommand(CMD* command, Board** board_ptr){
     int number;
@@ -314,9 +341,9 @@ bool doSetCommand(CMD* command,Board* board){
     if (!convertCommandToInt(command,3)){
         return 0;
     }
-    x = command->x_int;
-    y = command->y_int;
-    z = command->z_int;
+    x = command->x_int -1 ;
+    y = command->y_int -1 ;
+    z = command->z_int ;
 
     printf("x = %i ,y = %i ,z = %i \n",x,y,z);
 
@@ -331,7 +358,7 @@ bool doSetCommand(CMD* command,Board* board){
     }
     /* the params are valid !*/
 
-    if ( !setVal(board, y-1, x-1, z) ){
+    if ( !setVal(board, y, x, z) ){
         printf("Error: board not valid");
         return 0;
     }
@@ -418,12 +445,7 @@ bool do_commands(CMD* command, Board** board_ptr,DubList* moves){
             break;
 
         case GUESS_HINT:
-            printf("guess hint cmd\n");
-            if (doGuessHintCommand(command))
-            {
-                printBoard(board);
-            }
-            break;
+            return doGuessHintCommand(command,board);
 
         case NUM_SOLUTIONS:
             printf("NumSolutions cmd\n");

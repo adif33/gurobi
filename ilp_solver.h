@@ -14,13 +14,16 @@
 typedef enum status{
     validate,
     generate,
-    guess} Status;
+    guess,
+    guess_hint} Status;
 
 typedef struct solution {
     int error;
     bool solved ;
     Status stat;
     double thres;
+    int row;
+    int col;
 } Solution;
 
 
@@ -29,6 +32,8 @@ bool validateBoard(Board* board);
 bool generateBoard(Board** board_ptr,int numFill, int numRemove );
 
 bool guessBoard(Board* board, double threshold);
+
+bool hintGuess(Board* board, int row,int col);
 
 
 

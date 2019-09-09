@@ -172,7 +172,32 @@ int updateLPSolutionToBoard(Board* board,GRBmodel *model,double thres,int dim){
     return 0;
 }
 
+int showLPSolutionSingleCell(Board* board,GRBmodel *model,int row, int col){
+    int k, N, error,tmp_index;
+    double dtmp;
+    bool* valid;
 
+    N = board->N;
+    valid = calloc(sizeof(bool),N +1);
+    detectLegalValues(board,row,col,valid);
+
+    printf("Used LP solution to determine the following scores: \n");
+    for ( k = 0; k < N ; ++k) {
+        tmp_index = threeDimTo1d(row,col,k,N);
+        error = GRBgetdblattrelement(model, "X", tmp_index, &dtmp);
+        if (error){
+            return error;
+        }
+        if (dtmp > 0 && valid[k+1] ){
+            printf("Value: %i, Score: %f \n",k +1 ,dtmp);
+        }
+
+    }
+
+    free(valid);
+    return 0;
+
+}
 
  /*
   * Treats every cell with value != 0 as fixed
@@ -201,7 +226,7 @@ void solveBoard(Board* board,Solution* sol){
     char type;
     sol->error =0;
 
-    if (sol->stat == guess){
+    if (sol->stat == guess || sol->stat == guess_hint){
         type = GRB_CONTINUOUS ;
     } else {
         type = GRB_BINARY ;
@@ -290,6 +315,9 @@ void solveBoard(Board* board,Solution* sol){
             if (error) goto QUIT;
         } else if(sol->stat == guess){
             error = updateLPSolutionToBoard(board,model,sol->thres,N);
+            if (error) goto QUIT;
+        } else if(sol->stat == guess_hint){
+            error = showLPSolutionSingleCell(board,model,sol->row,sol->col);
             if (error) goto QUIT;
         }
     }
@@ -563,6 +591,22 @@ bool guessBoard(Board* board, double threshold){
         return false;
     }
     return true;
+}
 
+bool hintGuess(Board* board, int row,int col) {
+    Solution sol = {0};
+    sol.stat = guess_hint ;
+    sol.row = row;
+    sol.col = col;
+
+    solveBoard(board,&sol);
+    if (sol.error){
+        return false;
+    }
+    if (!sol.solved){
+        printf("Error: could not solve board \n");
+        return false;
+    }
+    return true;
 
 }
