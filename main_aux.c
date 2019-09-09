@@ -217,6 +217,11 @@ bool mainLoop(){
         {
             continue;
         }
+        if (cmd.type == RESET)
+        {
+            printf("Bye bye");
+            break;
+        }
 
         if (!do_commands(&cmd, &board,moves))
         {

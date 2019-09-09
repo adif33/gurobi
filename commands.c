@@ -132,10 +132,36 @@ bool doNumSolutionsCommand(CMD* command, Board** board_ptr){
 
     return false; /*we didnt change the board so we dont want to update dublist*/
 }
-int doAutofillCommand(CMD* command){
-    printf("param x : %s \n", command->x);
-    return 1;
+
+void doAutofillCommand(CMD* command, Board** board_ptr){
+    int row, column, N, value, correct_value;
+    Cell* curr_cell;
+
+
+    N = (*board_ptr)->N;
+
+    emptyCorrectValues((*board_ptr));
+
+    correct_value = 0;
+
+    for(row=0; row<N; row++) {
+        for (column = 0; column < N; column++) {
+
+            curr_cell = getCell((*board_ptr), row, column);
+            curr_cell->correct_value = correct_value;
+        }
+    }
+
+    for(row=0; row<N; row++) {
+        for (column = 0; column < N; column++) {
+
+            curr_cell = getCell((*board_ptr), row, column);
+            curr_cell->value = curr_cell->correct_value;
+        }
+    }
+
 }
+
 int doResetCommand(CMD* command){
     printf("param x : %s \n", command->x);
     return 1;
@@ -191,19 +217,15 @@ bool do_commands(CMD* command, Board** board_ptr,DubList* moves){
 
     switch (command->type) {
         case SOLVE:
-            doSolveCommand(command, board_ptr);
-            break;
+            return doSolveCommand(command, board_ptr);
 
         case EDIT:
-            doEditCommand(command, board_ptr);
-            break;
+            return doEditCommand(command, board_ptr);
 
         case MARK_ERRORS:
             printf("mark errors cmd\n");
-            if (doMarkErrorsCommand(command,board))
-            {
-                printBoard(board);
-            }
+            doMarkErrorsCommand(command,board);
+
             break;
 
         case PRINT_BOARD:
@@ -259,11 +281,7 @@ bool do_commands(CMD* command, Board** board_ptr,DubList* moves){
 
         case SAVE:
             printf("save cmd\n");
-            if (doSaveCommand(command, board_ptr))
-            {
-                printBoard(board);
-            }
-            break;
+            return doSaveCommand(command, board_ptr);
 
         case HINT:
             printf("hint cmd\n");
@@ -283,18 +301,12 @@ bool do_commands(CMD* command, Board** board_ptr,DubList* moves){
 
         case NUM_SOLUTIONS:
             printf("NumSolutions cmd\n");
-            if (doNumSolutionsCommand(command, board_ptr))
-            {
-                printBoard(board);
-            }
+            doNumSolutionsCommand(command, board_ptr);
             break;
 
         case AUTOFILL:
             printf("Autofill cmd\n");
-            if (doAutofillCommand(command))
-            {
-                printBoard(board);
-            }
+            doAutofillCommand(command, board_ptr);
             break;
 
         case RESET:

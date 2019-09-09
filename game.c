@@ -279,3 +279,21 @@ Board* creatCopiedBoard(Board* old_board){
 
     return new_board;
 }
+
+
+void emptyCorrectValues(Board* board){
+    int row, column, N;
+    Cell* curr_cell;
+
+    N = board->N;
+
+
+    for(row=0; row<N; row++) {
+        for (column = 0; column < N; column++) {
+            curr_cell = getCell(board, row, column);
+            curr_cell->correct_value = 0;
+        }
+    }
+    return;
+
+}

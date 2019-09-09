@@ -88,4 +88,6 @@ bool copyBoard(Board* old_board, Board* new_board);
 
 Board* creatCopiedBoard(Board* board);
 
+void emptyCorrectValues(Board* board);
+
 #endif /* GAME_H_ */
