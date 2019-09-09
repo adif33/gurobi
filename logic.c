@@ -45,6 +45,26 @@ bool isBoardSolved(Board* board){
 
 }
 
+bool isAllCellsFull(Board* board){
+    int N, row, column;
+    Cell* curr_cell;
+
+
+    N = board->N;
+
+    for(row=0; row<N; row++){
+        for(column=0; column<N; column++){
+            curr_cell = getCell(board, row, column);
+            if (curr_cell->value==0){
+                return false;
+            }
+
+        }
+    }
+    return true;
+
+}
+
 bool isErroneous(Board* board){
     int N, row, column;
     Cell* curr_cell;

@@ -17,6 +17,8 @@ bool isErroneous(Board* board);
 
 bool isBoardSolved(Board* board);
 
+bool isAllCellsFull(Board* board);
+
 int detectLegalValues(Board* board, int row, int col, bool* values);
 
 

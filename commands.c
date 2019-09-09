@@ -144,16 +144,18 @@ bool freeList(DubList* list){
 
 
 
-int doSolveCommand(CMD* command, Board** board_ptr){
+int doSolveCommand(CMD* command, Board** board_ptr, DubList* moves){
     freeBoard(*board_ptr);
 
     *board_ptr = loadBoard(command->x);
     (*board_ptr)->curr_mode = solve;
 
+    freeList(moves);
+
     return 1;
 }
 
-int doEditCommand(CMD* command, Board** board_ptr){
+int doEditCommand(CMD* command, Board** board_ptr, DubList* moves){
     /*TODO: handle errors in loadBoard*/
     printf("param x : %s \n", command->x);
     freeBoard(*board_ptr);
@@ -162,6 +164,8 @@ int doEditCommand(CMD* command, Board** board_ptr){
     } else{
         *board_ptr = loadBoard(command->x);
     }
+
+    freeList(moves);
 
 
     return 1;
@@ -388,6 +392,15 @@ bool doSetCommand(CMD* command,Board* board){
         printf("Error: board not valid");
         return 0;
     }
+
+    if (isAllCellsFull(board) && (board->curr_mode==solve)){
+        if( isBoardSolved(board)){
+            printf("VERY GOOD!!!!\n");
+            board->curr_mode = init;
+        } else{
+            printf("You have a problem... lame\n");
+        }
+    }
     return 1;
 }
 
@@ -401,10 +414,10 @@ bool do_commands(CMD* command, Board** board_ptr,DubList* moves){
 
     switch (command->type) {
         case SOLVE:
-            return doSolveCommand(command, board_ptr);
+            return doSolveCommand(command, board_ptr, moves);
 
         case EDIT:
-            return doEditCommand(command, board_ptr);
+            return doEditCommand(command, board_ptr, moves);
 
         case MARK_ERRORS:
             printf("mark errors cmd\n");
