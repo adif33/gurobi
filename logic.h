@@ -17,5 +17,7 @@ bool isErroneous(Board* board);
 
 bool isBoardSolved(Board* board);
 
+int detectLegalValues(Board* board, int row, int col, bool* values);
+
 
 #endif /* LOGIC_H_ */

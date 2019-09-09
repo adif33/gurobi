@@ -8,6 +8,7 @@ void freeBoard(Board* board){
     int row, column;
     Cell* curr_cell;
 
+    printf("freeing board %p \n",(void*)board);
     for(row=0; row<board->N; row++){
         curr_cell = getCell(board, row, 0);
         free(curr_cell);
@@ -248,15 +249,15 @@ bool copyBoard(Board* dst, Board* src){
 }
 
 bool checkRowColValid(Board* board,int row, int column){
-    if (column > board->N || column <=0 ){
+    if (column > board->N -1 || column < 0 ){
         printf(PARAMETER_X_ILLEGAL_ERROR);
-        return 0;
+        return false;
     }
-    if (row > board->N || row <=0 ){
+    if (row > board->N - 1 || row < 0 ){
         printf(PARAMETER_Y_ILLEGAL_ERROR);
-        return 0;
+        return false;
     }
-    return 1;
+    return true;
 }
 
 Board* creatCopiedBoard(Board* old_board){

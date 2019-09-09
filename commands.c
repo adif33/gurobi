@@ -1,6 +1,148 @@
 #include "commands.h"
 
 
+/*DOUBLY LINKED LIST - UNDO REDO*/
+
+void freeNextNodes(Node * node){
+    Node * tmp ;
+    Node * tmp1 ;
+    tmp = node;
+    while (tmp != NULL ){
+        tmp1 = tmp->next;
+        printf("freeing node %p , board %p \n",(void*)tmp,(void*)tmp->board);
+        freeBoard(tmp->board);
+        free(tmp);
+        tmp = tmp1;
+    }
+}
+
+void printList(DubList* list){
+    Node * node ;
+    Node* tmp;
+
+    node = list->curr;
+    if ( node == NULL){
+        printf("list is empty \n");
+    } else {
+        printf("FOREWARD:\n");
+        printf("-----------\n");
+        tmp = node;
+        while (tmp != NULL )
+        {
+            printf("node addr is  %p \n",(void*)tmp);
+            printf("\tnext id is: %p  \n",(void*)tmp->next);
+            printf("\tprev id is: %p  \n",(void*)tmp->prev);
+            printf("\tboard is: %p  \n",(void*)tmp->board);
+            tmp = tmp->next;
+        }
+        printf("BACKWARDS:\n");
+        printf("-----------\n");
+        tmp = node;
+        while (tmp != NULL )
+        {
+            printf("node addr is  %p \n",(void*)tmp);
+            printf("\tnext id is: %p  \n",(void*)tmp->next);
+            printf("\tprev id is: %p  \n",(void*)tmp->prev);
+            printf("\tboard is: %p  \n",(void*)tmp->board);
+            tmp = tmp->prev;
+        }
+        printf("done printing \n");
+
+    }
+}
+
+int pushToList(DubList* list, Board* boardPtr){
+
+    Node* tmp;
+    Node* current;
+    Node* newNode = (Node*)malloc(sizeof(Node));
+
+    newNode->board = boardPtr;
+    newNode->next = NULL;
+    current = list->curr;
+
+    if (current == NULL)
+    {
+        /*First element*/
+        list->curr = newNode;
+        newNode->prev = NULL;
+    }   else {
+        /*Not First element		*/
+        tmp = current->next;
+        current->next = newNode;
+        newNode->prev = current;
+        /*
+        printf("print after push: \n");
+        printList(list);
+        */
+        list->curr = newNode;
+
+
+        freeNextNodes(tmp);
+
+    }
+
+    return 0;
+}
+
+
+bool goStepBack(DubList* list){
+    Node * node ;
+    node = list->curr;
+
+    if (node == NULL ){
+        printf("Error: list is empty\n");
+        return false;
+    } else if (node->prev == NULL){
+        printf("Error: no more undos \n");
+        return false;
+    } else {
+        list->curr = node->prev;
+        return true;
+    }
+}
+bool goStepForward(DubList* list){
+    Node * node ;
+    node = list->curr;
+
+    if (node == NULL ){
+        printf("Error: list is empty\n");
+        return 0;
+    } else if (node->next == NULL){
+        printf("Error: no more Redos \n");
+        return 0;
+    } else {
+        list->curr = node->next;
+        return 1;
+    }
+}
+
+bool freeList(DubList* list){
+    Node* node = list->curr;
+    Node* tmp;
+
+    if (node == NULL){
+        return true;
+    }
+
+    /*Go back all the way*/
+    tmp = node->prev;
+
+    while (tmp != NULL )
+    {
+        node = tmp;
+        tmp = node->prev;
+
+    }
+    /*free all next nodes*/
+    list->curr = NULL;
+    freeNextNodes(node);
+    return true;
+}
+
+/*douly linked list end*/
+
+
 
 int doSolveCommand(CMD* command, Board** board_ptr){
     freeBoard(*board_ptr);
@@ -42,19 +184,36 @@ int doMarkErrorsCommand(CMD* command,Board* board){
     setMarkErrors(board, x);
     return 1;
 }
-int doValidateCommand(CMD* command){
-    printf("param x : %s \n", command->x);
-    return 1;
+bool doValidateCommand(Board* board){
+    if (isErroneous(board)){
+        printf("Error: Board is erroneous\n");
+        return false;
+    }
+    return validateBoard(board);
 }
-int doGuessCommand(CMD* command){
-    printf("param x : %s \n", command->x);
-    printf("test\n");
-    return 1;
+bool doGuessCommand(CMD* command,Board* board){
+    double thres ;
+    int error ;
+
+    error = sscanf(command->x,"%lf",&thres);
+    if (error == 0){
+        printf("Error: Parameter x is not a double\n");
+        return false;
+    }
+
+    if (isErroneous(board)){
+        printf("Error: Board is erroneous\n");
+        return false;
+    }
+    return guessBoard(board,thres);
 }
-int doGenerateCommand(CMD* command){
-    printf("param x : %s \n", command->x);
-    printf("param y : %s \n", command->y);
-    return 1;
+bool doGenerateCommand(CMD* command,Board** board_ptr){
+
+    if (!convertCommandToInt(command,2)){
+        return false;
+    }
+
+    return generateBoard(board_ptr,command->x_int,command->y_int);
 }
 bool doUndoCommand(DubList* list,Board** board_ptr){
     Board* board = *board_ptr;
@@ -110,10 +269,35 @@ int doHintCommand(CMD* command){
     printf("param y : %s \n", command->y);
     return 1;
 }
-int doGuessHintCommand(CMD* command){
-    printf("param x : %s \n", command->x);
-    printf("param y : %s \n", command->y);
-    return 1;
+bool doGuessHintCommand(CMD* command,Board* board){
+    int x,y;
+    /* convert params to int */
+    if (!convertCommandToInt(command,2)){
+        return false;
+    }
+    x = command->x_int-1;
+    y = command->y_int-1;
+
+    /* the params are numerical , check validity */
+    /* Adi likes y,x instead of x,y */
+    if (!checkRowColValid(board,y,x) ){
+        return false;
+    }
+
+    if (isErroneous(board)){
+        printf("Error: Board is erroneous\n");
+        return false;
+    }
+
+    if (isCellFixed(board,y,x)){
+        printf("Error: Cell is fixed\n");
+        return false;
+    }
+    if (getCellValue(board,y,x) !=  0){
+        printf("Error: Cell is not empty\n");
+        return false;
+    }
+    return hintGuess(board,y,x);
 }
 bool doNumSolutionsCommand(CMD* command, Board** board_ptr){
     int number;
@@ -183,9 +367,9 @@ bool doSetCommand(CMD* command,Board* board){
     if (!convertCommandToInt(command,3)){
         return 0;
     }
-    x = command->x_int;
-    y = command->y_int;
-    z = command->z_int;
+    x = command->x_int -1 ;
+    y = command->y_int -1 ;
+    z = command->z_int ;
 
     printf("x = %i ,y = %i ,z = %i \n",x,y,z);
 
@@ -200,7 +384,7 @@ bool doSetCommand(CMD* command,Board* board){
     }
     /* the params are valid !*/
 
-    if ( !setVal(board, y-1, x-1, z) ){
+    if ( !setVal(board, y, x, z) ){
         printf("Error: board not valid");
         return 0;
     }
@@ -241,28 +425,15 @@ bool do_commands(CMD* command, Board** board_ptr,DubList* moves){
             return false;
 
         case VALIDATE:
-            printf("validate cmd\n");
-            if (doValidateCommand(command))
-            {
-                printBoard(board);
-            }
-            break;
+            return doValidateCommand(board);
+
 
         case GUESS:
-            printf("guess cmd\n");
-            if (doGuessCommand(command))
-            {
-                printBoard(board);
-            }
-            break;
+            return doGuessCommand(command,board);
 
         case GENERATE:
-            printf("generate cmd\n");
-            if (doGenerateCommand(command))
-            {
-                printBoard(board);
-            }
-            break;
+            return doGenerateCommand(command,board_ptr);
+
 
         case UNDO:
             printf("undo cmd\n");
@@ -292,12 +463,7 @@ bool do_commands(CMD* command, Board** board_ptr,DubList* moves){
             break;
 
         case GUESS_HINT:
-            printf("guess hint cmd\n");
-            if (doGuessHintCommand(command))
-            {
-                printBoard(board);
-            }
-            break;
+            return doGuessHintCommand(command,board);
 
         case NUM_SOLUTIONS:
             printf("NumSolutions cmd\n");

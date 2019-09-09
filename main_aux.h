@@ -10,12 +10,16 @@
 #define PARAMETER_Y_ILLEGAL_ERROR "Error: Parameter y value is illegal\n"
 #define PARAMETER_Z_ILLEGAL_ERROR "Error: Parameter z value is illegal\n"
 
+#include <stdlib.h>
+
+
 #include "game.h"
 #include "loader.h"
 #include "commands.h"
 
 
 bool mainLoop();
+
 
 
 

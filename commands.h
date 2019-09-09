@@ -6,6 +6,7 @@
 #include "main_aux.h"
 #include "logic.h"
 #include "solver.h"
+#include "ilp_solver.h"
 
 
 typedef struct node Node;
