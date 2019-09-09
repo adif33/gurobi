@@ -191,10 +191,19 @@ bool doValidateCommand(Board* board){
     }
     return validateBoard(board);
 }
-int doGuessCommand(CMD* command){
+bool doGuessCommand(CMD* command,Board* board){
+    double thres ;
+    int error ;
+
     printf("param x : %s \n", command->x);
-    printf("test\n");
-    return 1;
+
+    error = sscanf(command->x,"%lf",&thres);
+    if (error == 0){
+        printf("Error: Parameter x is not a double\n");
+        return false;
+    }
+
+    return guessBoard(board,thres);
 }
 bool doGenerateCommand(CMD* command,Board** board_ptr){
 
@@ -371,12 +380,7 @@ bool do_commands(CMD* command, Board** board_ptr,DubList* moves){
 
 
         case GUESS:
-            printf("guess cmd\n");
-            if (doGuessCommand(command))
-            {
-                printBoard(board);
-            }
-            break;
+            return doGuessCommand(command,board);
 
         case GENERATE:
             return doGenerateCommand(command,board_ptr);

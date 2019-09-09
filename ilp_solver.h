@@ -20,6 +20,7 @@ typedef struct solution {
     int error;
     bool solved ;
     Status stat;
+    double thres;
 } Solution;
 
 
@@ -27,7 +28,7 @@ bool validateBoard(Board* board);
 
 bool generateBoard(Board** board_ptr,int numFill, int numRemove );
 
-bool guessBoard(Board* board);
+bool guessBoard(Board* board, double threshold);
 
 
 

@@ -124,6 +124,54 @@ int addConstEachBlockValue(GRBmodel *model,int N,int* ind,double* val,int n, int
     return 0;
 }
 
+int updateLPSolutionToBoard(Board* board,GRBmodel *model,double thres,int dim){
+    int i,j,k,error,tmp_index,value;
+    double dtmp;
+    bool* valid;
+    double* weight;
+    int* numbers;
+
+    valid = calloc(sizeof(bool),dim +1);
+    weight = calloc(sizeof(double),dim+1);
+    numbers = calloc(sizeof(int),dim+1);
+
+    for ( i = 0; i < dim + 1; ++i) {
+        numbers[i] = i;
+    }
+
+    for (i = 0; i < dim; ++i) {
+        for ( j = 0; j < dim; ++j) {
+            if (getCellValue(board,i,j) == 0 ){
+                detectLegalValues(board,i,j,valid);
+
+                for (k = 0; k < dim; ++k) {
+                    tmp_index = threeDimTo1d(i,j,k,dim);
+                    error = GRBgetdblattrelement(model, "X", tmp_index, &dtmp);
+                    if (error){
+                        return error;
+                    }
+                    if (dtmp > thres){
+                        weight[k+1] = dtmp*(int)valid[k+1];
+                    } else {
+                        weight[k+1] = 0;
+                    }
+
+                }
+                /*printf("i:%i, j: %i k: %i val: %f, valid %d \n",i,j,k,dtmp,valid[k+1]);*/
+                value = chooseRandomNumberByWeight(numbers,weight,dim+1);
+                if (!setVal(board,i,j,value)){
+                    return 1;
+                }
+            }
+        }
+    }
+
+    free(valid);
+    free(weight);
+    free(numbers);
+    return 0;
+}
+
 
 
  /*
@@ -150,7 +198,14 @@ void solveBoard(Board* board,Solution* sol){
     char** names;
     int error = 0;
     int       optimstatus;
+    char type;
     sol->error =0;
+
+    if (sol->stat == guess){
+        type = GRB_CONTINUOUS ;
+    } else {
+        type = GRB_BINARY ;
+    }
 
 
     namestorage =   calloc((2*3 + 6)*(N*N*N), sizeof(char) );
@@ -177,7 +232,7 @@ void solveBoard(Board* board,Solution* sol){
                 }
                 tmp_index = threeDimTo1d(i,j,k,N) ;
                 lb[tmp_index]   = tmp_lower_bound;
-                vtype[tmp_index]= GRB_BINARY;
+                vtype[tmp_index]= type;
 
                 names[tmp_index] = cursor;
                 sprintf(names[tmp_index], "x[%d,%d,%d]", i, j, k+1);
@@ -233,6 +288,9 @@ void solveBoard(Board* board,Solution* sol){
         if (sol->stat == generate){
             error = updateSolutionToBoard(board,model,N);
             if (error) goto QUIT;
+        } else if(sol->stat == guess){
+            error = updateLPSolutionToBoard(board,model,sol->thres,N);
+            if (error) goto QUIT;
         }
     }
     else
@@ -264,6 +322,8 @@ void solveBoard(Board* board,Solution* sol){
     free(lb);
     free(vtype);
     free(names);
+    free(val);
+    free(ind);
 
 
 }
@@ -486,4 +546,22 @@ bool generateBoard(Board** board_ptr,int cellsToFill, int cellsToRemove ){
     *board_ptr = copy;
 
     return true;
+}
+
+bool guessBoard(Board* board, double threshold){
+    Solution sol = {0};
+    sol.stat = guess ;
+    sol.thres = threshold;
+    srand(time(NULL));
+
+    solveBoard(board,&sol);
+    if (sol.error){
+        return false;
+    }
+    if (!sol.solved){
+        printf("Error: could not solve board \n");
+    }
+    return true;
+
+
 }

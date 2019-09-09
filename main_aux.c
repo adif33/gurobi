@@ -43,6 +43,37 @@ int convertCommandToInt(CMD* command,int argsNum){
     command->z_int = z;
     return 1;
 }
+/*
+ * assumes that all the
+ */
+int chooseRandomNumberByWeight(int* numbers,double* weights,int size){
+    int i,random;
+    int limit ;
+    int factor = 100;
+    double sum =0;
+
+    for ( i = 0; i < size; ++i) {
+        /*printf("number is: %i weight is:%f \n",numbers[i],weights[i]);*/
+        sum += weights[i];
+    }
+    if (sum == 0){
+        /*all weights are zero*/
+        return 0;
+
+    }
+    limit = factor * sum;
+    random = rand() % (limit ) + 1 ;
+
+    /*printf("limit is: %i random is: %i \n",limit,random);*/
+
+    for ( i = 0; i < size ; ++i) {
+        if (random < weights[i]*factor ){
+            return numbers[i];
+        }
+        random -= weights[i]*factor;
+    }
+    return 0;
+}
 
 
 void clearCMD(CMD* cmd){
