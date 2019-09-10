@@ -298,3 +298,10 @@ void emptyCorrectValues(Board* board){
     return;
 
 }
+
+
+int getCorrectValue(Board* board, int row, int column){
+    Cell* curr_cell;
+    curr_cell = getCell(board, row, column);
+    return curr_cell->correct_value;
+}

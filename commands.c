@@ -322,29 +322,56 @@ bool doNumSolutionsCommand(CMD* command, Board** board_ptr){
 }
 
 void doAutofillCommand(CMD* command, Board** board_ptr){
-    int row, column, N, value, correct_value;
+    int row, column, N, value, correct_value, count, i;
     Cell* curr_cell;
+    bool* bools;
+    Board* board;
+
+    board = *board_ptr;
 
 
-    N = (*board_ptr)->N;
+    N = board->N;
 
-    emptyCorrectValues((*board_ptr));
+    bools = (bool*)malloc(N*sizeof(bool));
+
+    emptyCorrectValues(board);
 
     correct_value = 0;
 
     for(row=0; row<N; row++) {
         for (column = 0; column < N; column++) {
+            /*for each cell*/
+            curr_cell = getCell(board, row, column);
 
-            curr_cell = getCell((*board_ptr), row, column);
-            curr_cell->correct_value = correct_value;
+            if (curr_cell->value == 0){
+                /*if empty cell*/
+                count = detectLegalValues(board, row, column, bools);
+
+                if (count==1){
+                    /*only one possible value*/
+
+                    for (i=1; i<=N; i++){
+
+                        if(bools[i]){
+                            /*set the value as correct_value*/
+                            curr_cell->correct_value = i;
+
+                        }
+                    }
+                }
+
+            }
         }
     }
 
     for(row=0; row<N; row++) {
         for (column = 0; column < N; column++) {
+            curr_cell = getCell(board, row, column);
+            if (getCellValue(board, row, column) == 0){
+                correct_value = getCorrectValue(board, row, column);
+                setVal(board, row, column, correct_value);
+            }
 
-            curr_cell = getCell((*board_ptr), row, column);
-            curr_cell->value = curr_cell->correct_value;
         }
     }
 

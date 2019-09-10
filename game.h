@@ -90,4 +90,6 @@ Board* creatCopiedBoard(Board* board);
 
 void emptyCorrectValues(Board* board);
 
+int getCorrectValue(Board* board, int row, int column);
+
 #endif /* GAME_H_ */
