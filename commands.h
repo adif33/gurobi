@@ -1,12 +1,14 @@
 #ifndef COMMANDS_H
 #define COMMANDS_H
 
+struct CMD;
+
 #include "game.h"
 #include "loader.h"
-#include "main_aux.h"
 #include "logic.h"
 #include "solver.h"
 #include "ilp_solver.h"
+#include "config.h"
 
 
 typedef struct node Node;

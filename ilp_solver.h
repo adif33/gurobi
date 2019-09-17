@@ -8,8 +8,8 @@
 
 #include "game.h"
 #include "logic.h"
+#include "config.h"
 
-#define GENERATE_CMD_NUM_RETRYS 3
 
 typedef enum status{
     validate,
@@ -33,7 +33,9 @@ bool generateBoard(Board** board_ptr,int numFill, int numRemove );
 
 bool guessBoard(Board* board, double threshold);
 
-bool hintGuess(Board* board, int row,int col);
+bool guessHintBoard(Board* board, int row,int col);
+
+bool hint(Board* board, int row,int col);
 
 
 

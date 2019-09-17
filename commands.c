@@ -1,5 +1,42 @@
 #include "commands.h"
 
+bool convertCommandToInt(CMD* command,int argsNum){
+    int x = -1;
+    int y = -1;
+    int z = -1;
+    char *endptr;
+
+    x = strtol(command->x,&endptr, 10);
+    if (endptr == command->x )
+    {
+        printf(PARAMETER_X_CONVERSION_ERROR);
+        return false;
+    }
+    command->x_int = x;
+    if (argsNum == 1){
+        return true;
+    }
+
+    y = strtol(command->y,&endptr, 10);
+    if (endptr == command->y )
+    {
+        printf(PARAMETER_Y_CONVERSION_ERROR);
+        return false;
+    }
+    command->y_int = y;
+    if (argsNum == 2){
+        return true;
+    }
+
+    z = strtol(command->z,&endptr, 10);
+    if (endptr == command->z )
+    {
+        printf(PARAMETER_Z_CONVERSION_ERROR);
+        return false;
+    }
+    command->z_int = z;
+    return true;
+}
 
 /*DOUBLY LINKED LIST - UNDO REDO*/
 
@@ -190,7 +227,7 @@ int doMarkErrorsCommand(CMD* command,Board* board){
 }
 bool doValidateCommand(Board* board){
     if (isErroneous(board)){
-        printf("Error: Board is erroneous\n");
+        printf(ERRONEOUS_BOARD_ERROR);
         return false;
     }
     return validateBoard(board);
@@ -201,19 +238,34 @@ bool doGuessCommand(CMD* command,Board* board){
 
     error = sscanf(command->x,"%lf",&thres);
     if (error == 0){
-        printf("Error: Parameter x is not a double\n");
+        printf(PARAMETER_X_NOT_DOUBLE_ERROR);
         return false;
     }
 
     if (isErroneous(board)){
-        printf("Error: Board is erroneous\n");
+        printf(ERRONEOUS_BOARD_ERROR);
         return false;
     }
     return guessBoard(board,thres);
 }
 bool doGenerateCommand(CMD* command,Board** board_ptr){
+    Board* board;
+    board = *board_ptr;
 
     if (!convertCommandToInt(command,2)){
+        return false;
+    }
+    if (command->x_int < 0 || command->x_int > board->N*board->N ){
+        printf(PARAMETER_X_ILLEGAL_ERROR);
+        return false;
+    }
+    if (command->y_int < 1 || command->y_int > board->N*board->N ){
+        printf(PARAMETER_Y_ILLEGAL_ERROR);
+        return false;
+    }
+
+    if (isErroneous(board)){
+        printf(ERRONEOUS_BOARD_ERROR);
         return false;
     }
 
@@ -268,10 +320,35 @@ bool doSaveCommand(CMD* command, Board** board_ptr){
 
     return true;
 }
-int doHintCommand(CMD* command){
-    printf("param x : %s \n", command->x);
-    printf("param y : %s \n", command->y);
-    return 1;
+bool doHintCommand(CMD* command,Board* board){
+    int x,y;
+    /* convert params to int */
+    if (!convertCommandToInt(command,2)){
+        return false;
+    }
+    x = command->x_int-1;
+    y = command->y_int-1;
+
+    /* the params are numerical , check validity */
+    /* Adi likes y,x instead of x,y */
+    if (!checkRowColValid(board,y,x) ){
+        return false;
+    }
+
+    if (isErroneous(board)){
+        printf(ERRONEOUS_BOARD_ERROR);
+        return false;
+    }
+
+    if (isCellFixed(board,y,x)){
+        printf(FIXED_CELL_ERROR);
+        return false;
+    }
+    if (getCellValue(board,y,x) !=  0){
+        printf(NOT_EMPTY_ERROR);
+        return false;
+    }
+    return hint(board,y,x);
 }
 bool doGuessHintCommand(CMD* command,Board* board){
     int x,y;
@@ -289,29 +366,30 @@ bool doGuessHintCommand(CMD* command,Board* board){
     }
 
     if (isErroneous(board)){
-        printf("Error: Board is erroneous\n");
+        printf(ERRONEOUS_BOARD_ERROR);
         return false;
     }
 
     if (isCellFixed(board,y,x)){
-        printf("Error: Cell is fixed\n");
+        printf(FIXED_CELL_ERROR);
         return false;
     }
     if (getCellValue(board,y,x) !=  0){
-        printf("Error: Cell is not empty\n");
+        printf(NOT_EMPTY_ERROR);
         return false;
     }
-    return hintGuess(board,y,x);
+    return guessHintBoard(board,y,x);
 }
 bool doNumSolutionsCommand(CMD* command, Board** board_ptr){
     int number;
+    /*TODO: delete this check */
     if((*board_ptr)->curr_mode != edit && (*board_ptr)->curr_mode != solve){
         printf("ERROR: wrong mode\n");
         return false;
     }
 
     if (isErroneous(*board_ptr)){
-        printf("ERROR: Board is Erroneous\n");
+        printf(ERRONEOUS_BOARD_ERROR);
         return false;
     }
 
@@ -381,7 +459,7 @@ int doResetCommand(CMD* command){
     printf("param x : %s \n", command->x);
     return 1;
 }
-bool doExitCommand(CMD* command,DubList* moves){
+bool doExitCommand(DubList* moves){
     moves->isOver = true;
     return 1;
 }
@@ -495,12 +573,7 @@ bool do_commands(CMD* command, Board** board_ptr,DubList* moves){
             return doSaveCommand(command, board_ptr);
 
         case HINT:
-            printf("hint cmd\n");
-            if (doHintCommand(command))
-            {
-                printBoard(board);
-            }
-            break;
+            return doHintCommand(command,board);
 
         case GUESS_HINT:
             return doGuessHintCommand(command,board);
@@ -524,7 +597,9 @@ bool do_commands(CMD* command, Board** board_ptr,DubList* moves){
             break;
         case EXIT:
             printf("Exit cmd\n");
-            doExitCommand(command,moves);
+            doExitCommand(moves);
+            return false;
+        case SKIP:
             return false;
 
 
