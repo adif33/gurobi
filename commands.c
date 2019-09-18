@@ -250,7 +250,7 @@ int doMarkErrorsCommand(CMD* command,Board* board){
     }
     /* the params are valid !*/
     setMarkErrors(board, x);
-    return 1;
+    return 0;
 }
 
 bool doValidateCommand(Board* board){
