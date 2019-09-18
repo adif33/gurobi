@@ -69,7 +69,7 @@ bool mainLoop(){
             printBoard(board);
         }
          */
-        if((cmd.type!=SOLVE) && (cmd.type!=EDIT)){
+        if((cmd.type!=SOLVE) && (cmd.type!=EDIT) && (cmd.type!=NUM_SOLUTIONS) && (cmd.type!=EDIT)){
             printBoard(board);
         }
 
