@@ -48,8 +48,8 @@
 
 
 
-#define PARAMETER_X_NOT_IN_RANGE_ERROR "Error: value not in range %i-%i\n",0,board->N
-#define PARAMETER_Y_NOT_IN_RANGE_ERROR "Error: value not in range %i-%i\n",0,board->N
+#define PARAMETER_X_NOT_IN_RANGE_ERROR "Error: value not in range %i-%i\n",1,board->N
+#define PARAMETER_Y_NOT_IN_RANGE_ERROR "Error: value not in range %i-%i\n",1,board->N
 #define PARAMETER_Z_NOT_IN_RANGE_ERROR "Error: value not in range %i-%i\n",0,board->N
 
 #define PARAMETER_X_ILLEGAL_ERROR "Error: Parameter x value is illegal\n"

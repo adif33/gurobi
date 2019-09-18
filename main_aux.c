@@ -46,6 +46,7 @@ bool mainLoop(){
         {
             continue;
         }
+        setErroneous(board);
         if (cmd.type != UNDO && cmd.type != REDO)
         {
             pushToList(moves, creatCopiedBoard(board));
@@ -63,8 +64,13 @@ bool mainLoop(){
         /*
         printList(moves);
         printf("board is: %p \n",(void*)board);
-        */
+
+        if (cmd.type != edit && cmd.type != solve){
+            printBoard(board);
+        }
+         */
         printBoard(board);
+
     }
 
     freeBoard(board);
