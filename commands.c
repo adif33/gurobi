@@ -286,11 +286,11 @@ bool doGenerateCommand(CMD* command,Board** board_ptr){
         return false;
     }
     if (command->x_int < 0 || command->x_int > board->N*board->N ){
-        printf(PARAMETER_X_ILLEGAL_ERROR);
+        printf(GENERATE_PARAMETER_X_NOT_IN_RANGE_ERROR);
         return false;
     }
     if (command->y_int < 1 || command->y_int > board->N*board->N ){
-        printf(PARAMETER_Y_ILLEGAL_ERROR);
+        printf(GENERATE_PARAMETER_Y_NOT_IN_RANGE_ERROR);
         return false;
     }
 
