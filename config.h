@@ -33,7 +33,7 @@
 #define INVALID_CMD_WRONG_MODE_ERROR "ERROR: invalid command\n"
 
 
-
+#define WRONG_MODE_ERROR "ERROR: Wrong mode\n"
 
 #define PARAMETER_X_CONVERSION_ERROR "Error: value not in range %i-%i\n",0,board->N
 #define PARAMETER_Y_CONVERSION_ERROR "Error: value not in range %i-%i\n",0,board->N
@@ -76,6 +76,11 @@
 #define FILE_OPENING_ERROR "ERROR: in opening file\n"
 #define BOARD_FORMAT_ERROR "Error: wrong board format\n"
 #define NOT_EMPTY_ERROR "Error: Cell is not empty\n"
+
+/*is solved*/
+
+#define SOLVED_MESSAGE "OMG I am so solved right now!!\n"
+#define NOT_SOLVED_MESSAGE "You call this solved? Try again...\n"
 
 
 

@@ -50,6 +50,14 @@ bool mainLoop(){
         {
             pushToList(moves, creatCopiedBoard(board));
         }
+        if (isAllCellsFull(board) && (board->curr_mode==solve)){
+            if( isBoardSolved(board)){
+                printf(SOLVED_MESSAGE);
+                board->curr_mode = init;
+            } else{
+                printf(NOT_SOLVED_MESSAGE);
+            }
+        }
 
         /*
         printList(moves);

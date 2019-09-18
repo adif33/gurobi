@@ -7,6 +7,7 @@
 #include "game.h"
 #include "loader.h"
 #include "parser.h"
+#include "config.h"
 
 bool mainLoop();
 

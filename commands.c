@@ -252,13 +252,16 @@ int doMarkErrorsCommand(CMD* command,Board* board){
     setMarkErrors(board, x);
     return 1;
 }
+
 bool doValidateCommand(Board* board){
     if (isErroneous(board)){
         printf(ERRONEOUS_BOARD_ERROR);
         return false;
     }
-    return validateBoard(board);
+    validateBoard(board);
+    return false;
 }
+
 bool doGuessCommand(CMD* command,Board* board){
     double thres ;
     int error ;
@@ -331,7 +334,7 @@ bool doSaveCommand(CMD* command, Board** board_ptr){
 
     printf("param x : %s \n", command->x);
     if((*board_ptr)->curr_mode != edit && (*board_ptr)->curr_mode != solve){
-        printf("ERROR: wrong mode\n");
+        printf(WRONG_MODE_ERROR);
         return false;
     }
 
@@ -362,7 +365,6 @@ bool doSaveCommand(CMD* command, Board** board_ptr){
             }
         }
     }
-    printf("################\n");
 
     return_value = saveBoard(*board_ptr, command->x);
 
@@ -442,7 +444,7 @@ bool doNumSolutionsCommand(CMD* command, Board** board_ptr){
     int number;
     /*TODO: delete this check */
     if((*board_ptr)->curr_mode != edit && (*board_ptr)->curr_mode != solve){
-        printf("ERROR: wrong mode\n");
+        printf(WRONG_MODE_ERROR);
         return false;
     }
 
@@ -514,7 +516,6 @@ void doAutofillCommand(CMD* command, Board** board_ptr){
 }
 
 int doResetCommand(CMD* command){
-    printf("param x : %s \n", command->x);
     return 1;
 }
 bool doExitCommand(DubList* moves){
@@ -556,14 +557,7 @@ bool doSetCommand(CMD* command,Board* board){
         return 0;
     }
 
-    if (isAllCellsFull(board) && (board->curr_mode==solve)){
-        if( isBoardSolved(board)){
-            printf("VERY GOOD!!!!\n");
-            board->curr_mode = init;
-        } else{
-            printf("You have a problem... lame\n");
-        }
-    }
+
     return 1;
 }
 
@@ -583,7 +577,6 @@ bool do_commands(CMD* command, Board** board_ptr,DubList* moves){
             return doEditCommand(command, board_ptr, moves);
 
         case MARK_ERRORS:
-            printf("mark errors cmd\n");
             doMarkErrorsCommand(command,board);
 
             break;
@@ -612,14 +605,12 @@ bool do_commands(CMD* command, Board** board_ptr,DubList* moves){
 
 
         case UNDO:
-            printf("undo cmd\n");
             if (doUndoCommand(moves,board_ptr))
             {
                 return true;
             }
             return false;
         case REDO:
-            printf("redo cmd\n");
             if (doRedoCommand(moves,board_ptr))
             {
                 return true;
@@ -627,7 +618,6 @@ bool do_commands(CMD* command, Board** board_ptr,DubList* moves){
             return false;
 
         case SAVE:
-            printf("save cmd\n");
             return doSaveCommand(command, board_ptr);
 
         case HINT:
@@ -637,17 +627,14 @@ bool do_commands(CMD* command, Board** board_ptr,DubList* moves){
             return doGuessHintCommand(command,board);
 
         case NUM_SOLUTIONS:
-            printf("NumSolutions cmd\n");
             doNumSolutionsCommand(command, board_ptr);
             break;
 
         case AUTOFILL:
-            printf("Autofill cmd\n");
             doAutofillCommand(command, board_ptr);
             break;
 
         case RESET:
-            printf("reset cmd\n");
             if (doResetCommand(command))
             {
                 printBoard(board);
