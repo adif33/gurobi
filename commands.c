@@ -328,7 +328,6 @@ bool doSaveCommand(CMD* command, Board** board_ptr){
     int row, column, N;
     Cell* curr_cell;
     Board* tmp_board;
-    bool return_value;
 
     tmp_board = *board_ptr;
 
@@ -366,7 +365,7 @@ bool doSaveCommand(CMD* command, Board** board_ptr){
         }
     }
 
-    return_value = saveBoard(*board_ptr, command->x);
+    saveBoard(*board_ptr, command->x);
 
     if ((*board_ptr)->curr_mode == edit){
         for(row=0; row<N; row++){
@@ -441,7 +440,7 @@ bool doGuessHintCommand(CMD* command,Board* board){
     }
     return guessHintBoard(board,y,x);
 }
-bool doNumSolutionsCommand(CMD* command, Board** board_ptr){
+bool doNumSolutionsCommand(Board** board_ptr){
     int number;
     /*TODO: delete this check */
     if((*board_ptr)->curr_mode != edit && (*board_ptr)->curr_mode != solve){
@@ -460,8 +459,8 @@ bool doNumSolutionsCommand(CMD* command, Board** board_ptr){
     return false; /*we didnt change the board so we dont want to update dublist*/
 }
 
-void doAutofillCommand(CMD* command, Board** board_ptr){
-    int row, column, N, value, correct_value, count, i, curr_value, curr_right_value;
+void doAutofillCommand(Board** board_ptr){
+    int row, column, N, count, i, curr_value, curr_right_value;
     Cell* curr_cell;
     bool* bools;
     Board* board;
@@ -475,7 +474,6 @@ void doAutofillCommand(CMD* command, Board** board_ptr){
 
     emptyCorrectValues(board);
 
-    correct_value = 0;
 
     for(row=0; row<N; row++) {
         for (column = 0; column < N; column++) {
@@ -521,6 +519,7 @@ void doAutofillCommand(CMD* command, Board** board_ptr){
 int doResetCommand(CMD* command){
     return 1;
 }
+
 bool doExitCommand(DubList* moves){
     moves->isOver = true;
     return 1;
@@ -628,11 +627,11 @@ bool do_commands(CMD* command, Board** board_ptr,DubList* moves){
             return doGuessHintCommand(command,board);
 
         case NUM_SOLUTIONS:
-            doNumSolutionsCommand(command, board_ptr);
+            doNumSolutionsCommand(board_ptr);
             break;
 
         case AUTOFILL:
-            doAutofillCommand(command, board_ptr);
+            doAutofillCommand(board_ptr);
             break;
 
         case RESET:

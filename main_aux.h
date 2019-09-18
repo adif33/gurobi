@@ -8,6 +8,7 @@
 #include "loader.h"
 #include "parser.h"
 #include "config.h"
+#include "commands.h"
 
 bool mainLoop();
 

@@ -20,7 +20,6 @@ bool mainLoop(){
     CMD cmd = {0};
     char cmd_text[CMD_MAX_LENGTH + 1] = {0};
 
-    /* TODO: remove this line and change createInitBoard function */
     board->curr_mode = init;
 
 

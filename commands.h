@@ -56,5 +56,7 @@ typedef struct {
 
 
 bool do_commands(CMD* command, Board** board_ptr,DubList* list);
+int pushToList(DubList* list, Board* boardPtr);
+bool freeList(DubList* list);
 
 #endif

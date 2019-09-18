@@ -150,7 +150,3 @@ int getNumberOfSolution(Board* board){
     return counter;
 }
 
-
-int countEmpty(Board* board){
-    return 10;
-}

@@ -497,7 +497,7 @@ bool validateBoard(Board* board){
     return res;
 }
 bool generateBoard(Board** board_ptr,int cellsToFill, int cellsToRemove ){
-    int i,emptyCells, removableCells,error ,optimstatus;
+    int i,emptyCells,error ,optimstatus;
     Board* board ;
     Board* copy ;
     GRBmodel *model = NULL;

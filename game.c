@@ -5,7 +5,7 @@
 
 
 void freeBoard(Board* board){
-    int row, column;
+    int row;
     Cell* curr_cell;
 
     /*printf("freeing board %p \n",(void*)board);*/
@@ -87,6 +87,7 @@ void printVerticalSeperator(){
 }
 
 void printPoint(Board* board, int row, int column){
+    /*return the aproproate point if errno or foxed or nothing*/
     Cell curr_cell;
     curr_cell = board->cells[row][column];
 
@@ -119,6 +120,7 @@ bool setVal(Board* board, int row, int col, int value){
 }
 
 void printBoard(Board* board){
+    /*will print the board*/
     int n, m, row, column, N;
 
     n = board->n;
