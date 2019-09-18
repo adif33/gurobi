@@ -5,11 +5,11 @@
 
 int main() {
     int status = 0;
-    printf("Welcome to the Gurobi game ! \n");
+    printf(GAME_BEGINNING_BANNER);
 
     status = mainLoop();
 
-    printf("exiting\n");
+    printf(GAME_ENDING_BANNER);
 
     return status;
 }

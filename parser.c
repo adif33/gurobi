@@ -15,6 +15,8 @@ int get_command(char* text_cmd){
     int len;
     char c;
 
+    printf(ENTER_COMMAND_BANNER);
+
     ptr = fgets(text_cmd, CMD_MAX_LENGTH +1  , stdin);
     if (ptr == NULL){
         return 0;

@@ -46,7 +46,7 @@ void freeNextNodes(Node * node){
     tmp = node;
     while (tmp != NULL ){
         tmp1 = tmp->next;
-        printf("freeing node %p , board %p \n",(void*)tmp,(void*)tmp->board);
+        /*printf("freeing node %p , board %p \n",(void*)tmp,(void*)tmp->board);*/
         freeBoard(tmp->board);
         free(tmp);
         tmp = tmp1;
@@ -193,8 +193,8 @@ int doSolveCommand(CMD* command, Board** board_ptr, DubList* moves){
 }
 
 int doEditCommand(CMD* command, Board** board_ptr, DubList* moves){
-    /*TODO: handle errors in loadBoard*/
-    printf("param x : %s \n", command->x);
+    /*TODO: handle errors in loadBoard
+    printf("param x : %s \n", command->x);*/
     freeBoard(*board_ptr);
     if(!command->x){
         *board_ptr = createInitBoard();
@@ -480,7 +480,7 @@ bool doSetCommand(CMD* command,Board* board){
     y = command->y_int -1 ;
     z = command->z_int ;
 
-    printf("x = %i ,y = %i ,z = %i \n",x,y,z);
+    /*printf("x = %i ,y = %i ,z = %i \n",x,y,z);*/
 
     /* the params are numerical , check validity */
     /* Adi likes y,x instead of x,y */
@@ -535,7 +535,7 @@ bool do_commands(CMD* command, Board** board_ptr,DubList* moves){
             break;
 
         case SET:
-            printf("set cmd\n");
+            /*printf("set cmd\n");*/
             if (doSetCommand(command, board))
             {
                 return true;
@@ -596,7 +596,7 @@ bool do_commands(CMD* command, Board** board_ptr,DubList* moves){
             }
             break;
         case EXIT:
-            printf("Exit cmd\n");
+            /*printf("Exit cmd\n");*/
             doExitCommand(moves);
             return false;
         case SKIP:

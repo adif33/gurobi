@@ -72,7 +72,7 @@ Board* loadBoard(char* path){
 
 
 
-    fscanf(fd, "%d %d\n", &n, &m);
+    fscanf(fd, "%d %d\n", &m, &n);
 
     row = 0;
     column = 0;
@@ -128,7 +128,7 @@ Board* loadBoard(char* path){
     }
     free(string_input);
     fclose(fd);
-    printf("inside: %p\n", board);
+    /*printf("inside: %p\n", board);*/
 
     return board;
 }
