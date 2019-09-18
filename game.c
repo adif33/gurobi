@@ -125,6 +125,7 @@ void printBoard(Board* board){
     m = board->m;
     N = board->N;
 
+    setErroneous(board);
     for(row=0; row<N; row++){
         if (row%m == 0){
             printHorizontalSeperator(N, m);

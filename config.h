@@ -27,7 +27,10 @@
 #define TOO_MANY_PARAMS_ERROR "Error: too many arguments\n"
 
 #define INVALID_CMD_ERROR "Error: invalid command \n"
+/**
 #define INVALID_CMD_WRONG_MODE_ERROR "Error: invalid command (wrong mode) \n"
+ */
+#define INVALID_CMD_WRONG_MODE_ERROR "ERROR: invalid command\n"
 
 
 
