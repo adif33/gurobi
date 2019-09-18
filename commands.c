@@ -195,12 +195,30 @@ int doSolveCommand(CMD* command, Board** board_ptr, DubList* moves){
 int doEditCommand(CMD* command, Board** board_ptr, DubList* moves){
     /*TODO: handle errors in loadBoard
     printf("param x : %s \n", command->x);*/
-    freeBoard(*board_ptr);
+    Board* tmp_board;
+    int N, row, column;
+    Cell* curr_cell;
+
+
     if(!command->x){
-        *board_ptr = createInitBoard();
+        tmp_board = createInitBoard();
     } else{
-        *board_ptr = loadBoard(command->x);
+        tmp_board = loadBoard(command->x);
     }
+    N = tmp_board->N;
+
+    for(row=0; row<N; row++){
+        for(column=0; column<N; column++){
+            curr_cell = getCell(tmp_board, row, column);
+            curr_cell->fixed = false;
+
+
+        }
+    }
+
+
+    freeBoard(*board_ptr);
+    *board_ptr = tmp_board;
 
     freeList(moves);
 
@@ -295,6 +313,12 @@ bool doRedoCommand(DubList* list,Board** board_ptr){
 }
 bool doSaveCommand(CMD* command, Board** board_ptr){
     /*TODO: handle errors in saveBoard*/
+    int row, column, N;
+    Cell* curr_cell;
+    Board* tmp_board;
+
+    tmp_board = *board_ptr;
+
     printf("param x : %s \n", command->x);
     if((*board_ptr)->curr_mode != edit && (*board_ptr)->curr_mode != solve){
         printf("ERROR: wrong mode\n");
@@ -316,7 +340,31 @@ bool doSaveCommand(CMD* command, Board** board_ptr){
             return false;
         }
     }
+    N = tmp_board->N;
+    if ((*board_ptr)->curr_mode == edit){
+        for(row=0; row<N; row++){
+            for(column=0; column<N; column++){
+                curr_cell = getCell(tmp_board, row, column);
+                if(curr_cell->value!=0){
+                    curr_cell->fixed = true;
+                }
+
+            }
+        }
+    }
+    printf("################\n");
+
     saveBoard(*board_ptr, command->x);
+
+    if ((*board_ptr)->curr_mode == edit){
+        for(row=0; row<N; row++){
+            for(column=0; column<N; column++){
+                curr_cell = getCell(tmp_board, row, column);
+                curr_cell->fixed = false;
+
+            }
+        }
+    }
 
     return true;
 }
