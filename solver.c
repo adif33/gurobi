@@ -146,6 +146,8 @@ int getNumberOfSolution(Board* board){
 
 
     }
+    free(stack->items);
+    free(stack);
 
     return counter;
 }
