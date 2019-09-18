@@ -332,7 +332,7 @@ bool doSaveCommand(CMD* command, Board** board_ptr){
 
     tmp_board = *board_ptr;
 
-    printf("param x : %s \n", command->x);
+    printf("save %s\n", command->x);
     if((*board_ptr)->curr_mode != edit && (*board_ptr)->curr_mode != solve){
         printf(WRONG_MODE_ERROR);
         return false;
@@ -378,7 +378,8 @@ bool doSaveCommand(CMD* command, Board** board_ptr){
         }
     }
 
-    return return_value;
+    /*return return_value;*/
+    return true;
 }
 bool doHintCommand(CMD* command,Board* board){
     int x,y;
@@ -579,9 +580,7 @@ bool do_commands(CMD* command, Board** board_ptr,DubList* moves){
             return doEditCommand(command, board_ptr, moves);
 
         case MARK_ERRORS:
-            doMarkErrorsCommand(command,board);
-
-            break;
+            return doMarkErrorsCommand(command,board);
 
         case PRINT_BOARD:
             printBoard(board);
