@@ -1,6 +1,6 @@
 #include "commands.h"
 
-bool convertCommandToInt(CMD* command,int argsNum){
+bool convertCommandToInt(CMD* command,int argsNum,Board* board){
     int x = -1;
     int y = -1;
     int z = -1;
@@ -238,7 +238,7 @@ int doMarkErrorsCommand(CMD* command,Board* board){
     int x = -1;
 
     /* convert params to int */
-    if (!convertCommandToInt(command,1)){
+    if (!convertCommandToInt(command,1,board)){
         return 0;
     }
     x = command->x_int;
@@ -279,7 +279,7 @@ bool doGenerateCommand(CMD* command,Board** board_ptr){
     Board* board;
     board = *board_ptr;
 
-    if (!convertCommandToInt(command,2)){
+    if (!convertCommandToInt(command,2,board)){
         return false;
     }
     if (command->x_int < 0 || command->x_int > board->N*board->N ){
@@ -381,7 +381,7 @@ bool doSaveCommand(CMD* command, Board** board_ptr){
 bool doHintCommand(CMD* command,Board* board){
     int x,y;
     /* convert params to int */
-    if (!convertCommandToInt(command,2)){
+    if (!convertCommandToInt(command,2,board)){
         return false;
     }
     x = command->x_int-1;
@@ -411,7 +411,7 @@ bool doHintCommand(CMD* command,Board* board){
 bool doGuessHintCommand(CMD* command,Board* board){
     int x,y;
     /* convert params to int */
-    if (!convertCommandToInt(command,2)){
+    if (!convertCommandToInt(command,2,board)){
         return false;
     }
     x = command->x_int-1;
@@ -531,7 +531,7 @@ bool doSetCommand(CMD* command,Board* board){
     int z = -1;
 
     /* convert params to int */
-    if (!convertCommandToInt(command,3)){
+    if (!convertCommandToInt(command,3,board)){
         return 0;
     }
     x = command->x_int -1 ;
@@ -546,13 +546,13 @@ bool doSetCommand(CMD* command,Board* board){
         return 0;
     }
     if (z > board->N || z <0 ){
-        printf("Error: Parameter z value is illegal\n");
+        printf(PARAMETER_Z_NOT_IN_RANGE_ERROR);
         return 0;
     }
     /* the params are valid !*/
 
     if ( !setVal(board, y, x, z) ){
-        printf("Error: board not valid");
+        printf("Error: board not valid\n");
         return 0;
     }
 

@@ -13,9 +13,17 @@
 
 #define ENTER_COMMAND_BANNER "Enter your command:\n"
 
+/*
 #define PARAMETER_X_MISSING_ERROR "Error: Parameter x is missing\n"
 #define PARAMETER_Y_MISSING_ERROR "Error: Parameter y is missing\n"
 #define PARAMETER_Z_MISSING_ERROR "Error: Parameter z is missing\n"
+ */
+#define PARAMETER_X_MISSING_ERROR "ERROR: invalid command\n"
+#define PARAMETER_Y_MISSING_ERROR "ERROR: invalid command\n"
+#define PARAMETER_Z_MISSING_ERROR "ERROR: invalid command\n"
+
+
+
 #define TOO_MANY_PARAMS_ERROR "Error: too many arguments\n"
 
 #define INVALID_CMD_ERROR "Error: invalid command \n"
@@ -24,12 +32,22 @@
 
 
 
+#define PARAMETER_X_CONVERSION_ERROR "Error: value not in range %i-%i\n",0,board->N
+#define PARAMETER_Y_CONVERSION_ERROR "Error: value not in range %i-%i\n",0,board->N
+#define PARAMETER_Z_CONVERSION_ERROR "Error: value not in range %i-%i\n",0,board->N
+
+/*
+ *
 #define PARAMETER_X_CONVERSION_ERROR "Error: Parameter x is not an integer\n"
 #define PARAMETER_Y_CONVERSION_ERROR "Error: Parameter y is not an integer\n"
 #define PARAMETER_Z_CONVERSION_ERROR "Error: Parameter z is not an integer\n"
+ */
+
+
 
 #define PARAMETER_X_NOT_IN_RANGE_ERROR "Error: value not in range %i-%i\n",0,board->N
 #define PARAMETER_Y_NOT_IN_RANGE_ERROR "Error: value not in range %i-%i\n",0,board->N
+#define PARAMETER_Z_NOT_IN_RANGE_ERROR "Error: value not in range %i-%i\n",0,board->N
 
 #define PARAMETER_X_ILLEGAL_ERROR "Error: Parameter x value is illegal\n"
 #define PARAMETER_Y_ILLEGAL_ERROR "Error: Parameter y value is illegal\n"
