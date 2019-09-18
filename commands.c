@@ -501,6 +501,8 @@ void doAutofillCommand(Board** board_ptr){
         }
     }
 
+    free(bools);
+
     for(row=0; row<N; row++) {
         for (column = 0; column < N; column++) {
             curr_cell = getCell(board, row, column);
