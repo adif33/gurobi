@@ -64,6 +64,10 @@
 /*
  * Generate + guess related
  */
+#define GENERATE_PARAMETER_X_NOT_IN_RANGE_ERROR "Error: value not in range %i-%i\n",0,board->N*board->N
+#define GENERATE_PARAMETER_Y_NOT_IN_RANGE_ERROR "Error: value not in range %i-%i\n",0,board->N*board->N
+
+#define GENERATE_PARAMETER_X_NOT_ENOUGH_EMPTY_CELLS "Error: value not in range %i-%i\n",0,emptyCells
 
 #define PARAMETER_X_NOT_DOUBLE_ERROR "Error: Parameter x is not a double\n"
 #define FIXED_CELL_ERROR "Error: Cell is fixed\n"

@@ -511,15 +511,17 @@ bool generateBoard(Board** board_ptr,int cellsToFill, int cellsToRemove ){
     emptyCells =countEmptyCells(board);
 
     if ( emptyCells < cellsToFill ){
-        printf("Error: number of empty cells is insufficient \n");
+        printf(GENERATE_PARAMETER_X_NOT_ENOUGH_EMPTY_CELLS);
         return false;
     }
 
+    /* NOT POSSIBLE !!!!!!
     removableCells = countRemovableCells(board);
     if ( removableCells < cellsToRemove ){
         printf("Error: number of removable cells is insufficient \n");
         return false;
     }
+     */
 
     for (i = 0; i < GENERATE_CMD_NUM_RETRYS ; ++i) {
 
