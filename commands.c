@@ -460,7 +460,7 @@ bool doNumSolutionsCommand(CMD* command, Board** board_ptr){
 }
 
 void doAutofillCommand(CMD* command, Board** board_ptr){
-    int row, column, N, value, correct_value, count, i;
+    int row, column, N, value, correct_value, count, i, curr_value, curr_right_value;
     Cell* curr_cell;
     bool* bools;
     Board* board;
@@ -505,9 +505,11 @@ void doAutofillCommand(CMD* command, Board** board_ptr){
     for(row=0; row<N; row++) {
         for (column = 0; column < N; column++) {
             curr_cell = getCell(board, row, column);
-            if (getCellValue(board, row, column) == 0){
-                correct_value = getCorrectValue(board, row, column);
-                setVal(board, row, column, correct_value);
+            curr_value = getCellValue(board, row, column);
+            curr_right_value = getCorrectValue(board, row, column);
+            if ((curr_value == 0) && (curr_right_value !=0)){
+                setVal(board, row, column, curr_right_value);
+                printf(CHANGE_CELL_VALUE_FORMAT, column+1, row+1, curr_right_value);
             }
 
         }

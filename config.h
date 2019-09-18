@@ -82,6 +82,10 @@
 #define SOLVED_MESSAGE "OMG I am so solved right now!!\n"
 #define NOT_SOLVED_MESSAGE "You call this solved? Try again...\n"
 
+/*autofill*/
+
+#define CHANGE_CELL_VALUE_FORMAT "Cell <%d,%d> set to %d\n"
+
 
 
 #endif /* CONF_H_ */

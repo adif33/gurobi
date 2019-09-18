@@ -130,7 +130,7 @@ Board* loadBoard(char* path){
     }
     free(string_input);
     fclose(fd);
-
+    board->mark_errors=true;
     return board;
 }
 
