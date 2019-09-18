@@ -69,5 +69,11 @@
 #define GENERATE_CMD_NUM_RETRYS 3
 #define VAR_NAME_MAX_SIZE 12  /* 2*3 + 6  */
 
+/*loader confs*/
+#define FILE_OPENING_ERROR "ERROR: in opening file\n"
+#define BOARD_FORMAT_ERROR "Error: wrong board format\n"
+#define NOT_EMPTY_ERROR "Error: Cell is not empty\n"
+
+
 
 #endif /* CONF_H_ */

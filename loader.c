@@ -7,7 +7,7 @@ bool saveBoard(Board* board, char* path){
     fp = fopen (path, "w+");
     if (fp == NULL)
     {
-        printf("ERROR: in opening file\n");
+        printf(FILE_OPENING_ERROR);
         return false;
     }
 
@@ -69,7 +69,7 @@ Board* loadBoard(char* path){
 
     if (fd == NULL)
     {
-        printf("ERROR: in opening file\n");
+        printf(FILE_OPENING_ERROR);
         return NULL;
     }
 
@@ -108,7 +108,7 @@ Board* loadBoard(char* path){
 
                 } else{
                     /*ERROR!!!!*/
-                    printf("ERROR2!!!\n");
+                    printf(BOARD_FORMAT_ERROR);
                     return NULL;
                 }
             }
@@ -121,7 +121,7 @@ Board* loadBoard(char* path){
 
             } else{
                 /*Error!!!*/
-                printf("ERROR3!!!\n");
+                printf(BOARD_FORMAT_ERROR);
                 return NULL;
             }
 
@@ -130,7 +130,6 @@ Board* loadBoard(char* path){
     }
     free(string_input);
     fclose(fd);
-    /*printf("inside: %p\n", board);*/
 
     return board;
 }

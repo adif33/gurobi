@@ -5,6 +5,8 @@
 #define DEFAULT_MATRIX_TEXT_SIZE (1000)
 
 #include "game.h"
+#include "config.h"
+
 #include <stdbool.h>
 #include <ctype.h>
 #include <string.h>
