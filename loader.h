@@ -10,7 +10,7 @@
 #include <string.h>
 #include <errno.h>
 
-void saveBoard(Board* board, char* path);
+bool saveBoard(Board* board, char* path);
 
 char* createSavedBoardText(Board* board);
 

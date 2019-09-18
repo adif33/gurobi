@@ -182,9 +182,15 @@ bool freeList(DubList* list){
 
 
 int doSolveCommand(CMD* command, Board** board_ptr, DubList* moves){
-    freeBoard(*board_ptr);
+    Board* tmp_board;
 
-    *board_ptr = loadBoard(command->x);
+    tmp_board = loadBoard(command->x);
+    if ((tmp_board==NULL)){
+        return 0;
+    }
+
+    freeBoard(*board_ptr);
+    *board_ptr = tmp_board;
     (*board_ptr)->curr_mode = solve;
 
     freeList(moves);
@@ -204,6 +210,9 @@ int doEditCommand(CMD* command, Board** board_ptr, DubList* moves){
         tmp_board = createInitBoard();
     } else{
         tmp_board = loadBoard(command->x);
+        if ((tmp_board==NULL)){
+            return 0;
+        }
     }
     N = tmp_board->N;
 
@@ -316,6 +325,7 @@ bool doSaveCommand(CMD* command, Board** board_ptr){
     int row, column, N;
     Cell* curr_cell;
     Board* tmp_board;
+    bool return_value;
 
     tmp_board = *board_ptr;
 
@@ -354,7 +364,7 @@ bool doSaveCommand(CMD* command, Board** board_ptr){
     }
     printf("################\n");
 
-    saveBoard(*board_ptr, command->x);
+    return_value = saveBoard(*board_ptr, command->x);
 
     if ((*board_ptr)->curr_mode == edit){
         for(row=0; row<N; row++){
@@ -366,7 +376,7 @@ bool doSaveCommand(CMD* command, Board** board_ptr){
         }
     }
 
-    return true;
+    return return_value;
 }
 bool doHintCommand(CMD* command,Board* board){
     int x,y;

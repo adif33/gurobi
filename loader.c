@@ -1,10 +1,15 @@
 #include "loader.h"
 
-void saveBoard(Board* board, char* path){
+bool saveBoard(Board* board, char* path){
     FILE* fp;
     char* text;
 
     fp = fopen (path, "w+");
+    if (fp == NULL)
+    {
+        printf("ERROR: in opening file\n");
+        return false;
+    }
 
     text = createSavedBoardText(board);
     fprintf(fp, "%s", text);
@@ -12,7 +17,7 @@ void saveBoard(Board* board, char* path){
     fclose(fp);
     free(text);
 
-    return;
+    return true;
 
 }
 
@@ -62,14 +67,11 @@ Board* loadBoard(char* path){
 
     fd = fopen(path, "r");
 
-
-    if (fd == NULL) {
-        /*TODO:print error*/
-        printf("ERROR1!!!\n");
-        printf(" Value of errno: %d\n ", errno);
+    if (fd == NULL)
+    {
+        printf("ERROR: in opening file\n");
         return NULL;
     }
-
 
 
     fscanf(fd, "%d %d\n", &m, &n);
