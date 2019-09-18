@@ -583,7 +583,7 @@ bool do_commands(CMD* command, Board** board_ptr,DubList* moves){
 
         case PRINT_BOARD:
             printBoard(board);
-            break;
+            return false;
 
         case SET:
             /*printf("set cmd\n");*/
