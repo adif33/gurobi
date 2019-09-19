@@ -55,7 +55,7 @@ bool mainLoop(){
             }
         }
 
-        if((cmd.type!=SOLVE) && (cmd.type!=EDIT) && (cmd.type!=NUM_SOLUTIONS) && (cmd.type!=EDIT)){
+        if(cmd.type!=NUM_SOLUTIONS){
             printBoard(board);
         }
 
