@@ -142,6 +142,8 @@ bool goStepForward(DubList* list){
     Node * node ;
     node = list->curr;
 
+    /*printf("redo \n");
+    printList(list);*/
     if (node == NULL ){
         printf("Error: list is empty\n");
         return 0;
@@ -174,6 +176,29 @@ bool freeList(DubList* list){
     /*free all next nodes*/
     list->curr = NULL;
     freeNextNodes(node);
+    return true;
+}
+
+bool doReset(DubList* list){
+    Node* node = list->curr;
+    Node* tmp;
+
+    if (node == NULL){
+        return true;
+    }
+
+    /*Go back all the way*/
+    tmp = node->prev;
+
+    while (tmp != NULL )
+    {
+        node = tmp;
+        tmp = node->prev;
+
+    }
+    /*free all next nodes*/
+    list->curr = node;
+    /*printList(list);*/
     return true;
 }
 
@@ -305,6 +330,11 @@ bool doUndoCommand(DubList* list,Board** board_ptr){
     Board* board = *board_ptr;
     if (goStepBack(list) )
     {
+<<<<<<< HEAD
+=======
+        /*printf("freeing board %p \n",(void*) board);*/
+        freeBoard(board);
+>>>>>>> 27a524b8694624fadd342641330b19c9736aefb3
         *board_ptr = creatCopiedBoard((list->curr)->board);
         delta(board, *board_ptr);
         freeBoard(board);
@@ -316,6 +346,11 @@ bool doRedoCommand(DubList* list,Board** board_ptr){
     Board* board = *board_ptr;
     if (goStepForward(list) )
     {
+<<<<<<< HEAD
+=======
+        /*printf("freeing board %p \n",(void*) board);*/
+        freeBoard(board);
+>>>>>>> 27a524b8694624fadd342641330b19c9736aefb3
         *board_ptr = creatCopiedBoard((list->curr)->board);
         delta(board, *board_ptr);
         freeBoard(board);
@@ -518,8 +553,13 @@ void doAutofillCommand(Board** board_ptr){
 
 }
 
-int doResetCommand(CMD* command){
-    return 1;
+bool doResetCommand(DubList* list,Board** board_ptr){
+    doReset(list);
+
+    freeBoard(*board_ptr);
+    *board_ptr = creatCopiedBoard((list->curr)->board);
+    return true;
+
 }
 
 bool doExitCommand(DubList* moves){
@@ -637,11 +677,7 @@ bool do_commands(CMD* command, Board** board_ptr,DubList* moves){
             break;
 
         case RESET:
-            if (doResetCommand(command))
-            {
-                printBoard(board);
-            }
-            break;
+            return doResetCommand(moves,board_ptr);
         case EXIT:
             /*printf("Exit cmd\n");*/
             doExitCommand(moves);

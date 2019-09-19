@@ -35,18 +35,12 @@ bool mainLoop(){
         {
             continue;
         }
-        if (cmd.type == RESET)
-        {
-            printf("Bye bye");
-            break;
-        }
-
         if (!do_commands(&cmd, &board,moves))
         {
             continue;
         }
         setErroneous(board);
-        if (cmd.type != UNDO && cmd.type != REDO)
+        if (cmd.type != UNDO && cmd.type != REDO && cmd.type != RESET)
         {
             pushToList(moves, creatCopiedBoard(board));
         }
