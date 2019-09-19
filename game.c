@@ -19,6 +19,7 @@ void freeBoard(Board* board){
 }
 
 Board* createEmptyBoard(int n, int m){
+    /* return an empty board with n and m*/
     Board *board = (Board*)malloc(sizeof(Board));
     Cell** cells;
     int i, j;
@@ -105,6 +106,7 @@ void printPoint(Board* board, int row, int column){
 
 
 bool setVal(Board* board, int row, int col, int value){
+    /* set value of a cell*/
     Cell* curr_cell;
 
     if(board->curr_mode == init){
@@ -154,6 +156,7 @@ void printBoard(Board* board){
 }
 
 bool gotHorizontalDuplicate(Board* board, int row, int column){
+    /*return if a cell got dulpicate*/
     int val, i;
 
     val = board->cells[row][column].value;
@@ -170,6 +173,7 @@ bool gotHorizontalDuplicate(Board* board, int row, int column){
 }
 
 bool gotVerticalDuplicate(Board* board, int row, int column){
+    /*return if a cell got dulpicate*/
     int val, i;
 
     val = board->cells[row][column].value;
@@ -186,6 +190,8 @@ bool gotVerticalDuplicate(Board* board, int row, int column){
 }
 
 bool gotBlockDuplicate(Board* board, int row, int column){
+    /*return if a cell got dulpicate*/
+
     int i, j, val, block_start_row, block_end_row, block_start_column, block_end_column;
     val = board->cells[row][column].value;
 
@@ -215,6 +221,7 @@ void setMarkErrors(Board* board, bool value){
 }
 
 void setFixed(Board* board, int row, int col, bool fixed){
+    /* set cell as fixed */
     Cell* curr_cell;
 
     curr_cell = getCell(board, row, col);
@@ -223,6 +230,7 @@ void setFixed(Board* board, int row, int col, bool fixed){
 
 
 bool copyBoard(Board* dst, Board* src){
+    /* copy board from one pointer to second */
     int N;
     int i =0 ;
     int j = 0;
@@ -265,7 +273,7 @@ bool checkRowColValid(Board* board,int row, int column){
 }
 
 Board* creatCopiedBoard(Board* old_board){
-    /*TODO: add fixed and such*/
+    /* create a copy and return pointer*/
     Board* new_board;
     int row, column, N;
     Cell* src_cell;

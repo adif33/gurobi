@@ -14,13 +14,14 @@ void clearCMD(CMD* cmd){
 }
 
 bool mainLoop(){
+    /* this is the main part of the code*/
     DubList dlist = {0};
     DubList* moves = &dlist;
-    Board* board = createInitBoard();
+    Board* board = createInitBoard(); /*creating empty board*/
     CMD cmd = {0};
     char cmd_text[CMD_MAX_LENGTH + 1] = {0};
 
-    board->curr_mode = init;
+    board->curr_mode = init; /*setting mode to init*/
 
 
     while (true){
@@ -31,11 +32,11 @@ bool mainLoop(){
             break;
         }
 
-        if (!parse_command(cmd_text, &cmd, board))
+        if (!parse_command(cmd_text, &cmd, board))  /*here we get the data from each commands*/
         {
             continue;
         }
-        if (!do_commands(&cmd, &board,moves))
+        if (!do_commands(&cmd, &board,moves)) /* this will preform the command*/
         {
             continue;
         }
@@ -45,7 +46,7 @@ bool mainLoop(){
             pushToList(moves, creatCopiedBoard(board));
         }
 
-        if (isAllCellsFull(board) && (board->curr_mode==solve)){
+        if (isAllCellsFull(board) && (board->curr_mode==solve)){ /*check if we finished the game */
             if( isBoardSolved(board)){
                 printf(SOLVED_MESSAGE);
                 board->curr_mode = init;
@@ -54,14 +55,6 @@ bool mainLoop(){
             }
         }
 
-        /*
-        printList(moves);
-        printf("board is: %p \n",(void*)board);
-
-        if (cmd.type != edit && cmd.type != solve){
-            printBoard(board);
-        }
-         */
         if((cmd.type!=SOLVE) && (cmd.type!=EDIT) && (cmd.type!=NUM_SOLUTIONS) && (cmd.type!=EDIT)){
             printBoard(board);
         }

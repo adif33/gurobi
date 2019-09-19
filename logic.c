@@ -6,6 +6,7 @@
 
 
 void setErroneous(Board* board){
+    /* set all erroneous cell as such*/
     int row, column, val;
     for(row=0; row<board->N; row++){
         for(column=0; column < board->N; column++){
@@ -23,6 +24,7 @@ void setErroneous(Board* board){
 
 
 bool isBoardSolved(Board* board){
+    /* as name implies*/
     int N, row, column;
     Cell* curr_cell;
 
@@ -66,6 +68,7 @@ bool isAllCellsFull(Board* board){
 }
 
 bool isErroneous(Board* board){
+    /* is there erroneous cells*/
     int N, row, column;
     Cell* curr_cell;
 

@@ -356,7 +356,6 @@ bool doSaveCommand(CMD* command, Board** board_ptr){
 
     tmp_board = *board_ptr;
 
-    printf("save %s\n", command->x);
     if((*board_ptr)->curr_mode != edit && (*board_ptr)->curr_mode != solve){
         printf(WRONG_MODE_ERROR);
         return false;

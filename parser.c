@@ -11,6 +11,7 @@
  */
 
 int get_command(char* text_cmd){
+    /* get command from the user */
     char* ptr;
     int len;
     char c;
@@ -46,6 +47,7 @@ int get_command(char* text_cmd){
 }
 
 bool parse_command(char* text, CMD* command,Board* board){
+    /* parse the command to the CMD format */
     char* par;
     int i =0 ;
     int argsNum = 0;

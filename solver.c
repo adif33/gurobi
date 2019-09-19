@@ -2,7 +2,7 @@
 
 #include "solver.h"
 
-
+/* all stack related items:*/
 
 Stack* createStack(int capacity)
 {
@@ -73,9 +73,8 @@ StackItem* pop(Stack *pt)
     return pt->items[pt->top--];
 }
 
-
+/* will preform very exhaustive backtrack to find all solutions*/
 int getNumberOfSolution(Board* board){
-    /*BUG: when the first value is zero*/
     Stack* stack = createStack(MAX_STACK_CAPACITY);
     StackItem* curr_stackItem;
     Board* curr_board;
@@ -91,6 +90,7 @@ int getNumberOfSolution(Board* board){
         push(stack, curr_stackItem);
     } else{
         for(value=1; value<=N; value++){
+            /* for every posibility*/
             new_board = creatCopiedBoard(board);
             setVal(new_board, 0, 0, value);
             curr_stackItem = createStackItem(new_board, 0, 0);
@@ -100,6 +100,7 @@ int getNumberOfSolution(Board* board){
 
 
     while(!isEmpty(stack)){
+        /* start the main iteration of every possibility*/
         curr_stackItem = pop(stack);
 
         curr_board = curr_stackItem->board;
@@ -109,11 +110,13 @@ int getNumberOfSolution(Board* board){
         if ((gotHorizontalDuplicate(curr_board, row, column) ||
              gotVerticalDuplicate(curr_board, row, column) ||
              gotBlockDuplicate(curr_board, row, column))){
+            /* bad item*/
             freeBoard(curr_board);
             free(curr_stackItem);
 
         } else{
             if (row==N-1 && column==N-1){
+                /* out of scope */
                 counter++;
                 freeBoard(curr_board);
                 free(curr_stackItem);
@@ -129,6 +132,7 @@ int getNumberOfSolution(Board* board){
                 free(curr_stackItem);
 
                 for(value=1; value<=N; value++){
+                    /* for every posibility*/
                     new_board = creatCopiedBoard(curr_board);
                     setVal(new_board, row, column, value);
                     curr_stackItem = createStackItem(new_board, row, column);
@@ -138,6 +142,7 @@ int getNumberOfSolution(Board* board){
                 freeBoard(curr_board);
 
             } else{
+                /* add new stack item*/
                 curr_stackItem->row = row;
                 curr_stackItem->column = column;
                 push(stack, curr_stackItem);

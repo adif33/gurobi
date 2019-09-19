@@ -22,6 +22,7 @@ bool saveBoard(Board* board, char* path){
 }
 
 char* createSavedBoardText(Board* board){
+    /* return the text of the save file*/
     int len, row, column;
     char* text;
     Cell* curr_cell;
