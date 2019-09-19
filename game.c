@@ -309,3 +309,22 @@ int getCorrectValue(Board* board, int row, int column){
     curr_cell = getCell(board, row, column);
     return curr_cell->correct_value;
 }
+
+
+void delta(Board* old_board, Board* new_board){
+    int row, column, N;
+
+    int new_value, old_value;
+
+    N = old_board->N;
+
+    for(row=0; row<N; row++) {
+        for (column = 0; column < N; column++) {
+            new_value = getCell(new_board, row, column)->value;
+            old_value = getCell(old_board, row, column)->value;
+            if (old_value != new_value){
+                printf(DELTA_PRINT, column+1, row+1, old_value, new_value);
+            }
+        }
+    }
+}

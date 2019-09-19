@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include "config.h"
 
 
 
@@ -91,5 +92,7 @@ Board* creatCopiedBoard(Board* board);
 void emptyCorrectValues(Board* board);
 
 int getCorrectValue(Board* board, int row, int column);
+
+void delta(Board* old_board, Board* new_board);
 
 #endif /* GAME_H_ */

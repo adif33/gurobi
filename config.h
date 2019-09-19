@@ -90,6 +90,6 @@
 
 #define CHANGE_CELL_VALUE_FORMAT "Cell <%d,%d> set to %d\n"
 
-
+#define DELTA_PRINT "Cell <%d,%d> changed from %d to %d\n"
 
 #endif /* CONF_H_ */
