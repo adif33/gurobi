@@ -518,8 +518,8 @@ bool validateBoard(Board* board){
  * then tries to solve using ILP and then removes random Y cells
  * if falis, returns false and pring relevant error msg
  */
-bool generateBoard(Board** board_ptr,int cellsToFill, int cellsToRemove ){
-    int i,emptyCells,error ,optimstatus;
+bool generateBoard(Board** board_ptr,int cellsToFill, int cellsToKeep ){
+    int i,N,emptyCells,error ,optimstatus, cellsToRemove;
     Board* board ;
     Board* copy ;
     GRBmodel *model = NULL;
@@ -528,9 +528,11 @@ bool generateBoard(Board** board_ptr,int cellsToFill, int cellsToRemove ){
 
     res =true;
     board = *board_ptr;
+    N = board->N;
     srand(time(NULL));
 
     emptyCells =countEmptyCells(board);
+    cellsToRemove = N*N - cellsToKeep;
 
     if ( emptyCells < cellsToFill ){
         printf(GENERATE_PARAMETER_X_NOT_ENOUGH_EMPTY_CELLS);

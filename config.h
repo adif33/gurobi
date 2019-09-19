@@ -75,7 +75,7 @@
 #define FIXED_CELL_ERROR "Error: Cell is fixed\n"
 #define NOT_EMPTY_ERROR "Error: Cell is not empty\n"
 
-#define GENERATE_CMD_NUM_RETRYS 3
+#define GENERATE_CMD_NUM_RETRYS 1000
 #define VAR_NAME_MAX_SIZE 12  /* 2*3 + 6  */
 
 #define BOARD_IS_SOLVABLE_MSG "Board is solvable ! \n"
