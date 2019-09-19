@@ -62,12 +62,14 @@
 #define ERRONEOUS_BOARD_ERROR "Error: Board is erroneous\n"
 
 /*
- * Generate + guess related
+ * GUROBI related
  */
 #define GENERATE_PARAMETER_X_NOT_IN_RANGE_ERROR "Error: value not in range %i-%i\n",0,board->N*board->N
 #define GENERATE_PARAMETER_Y_NOT_IN_RANGE_ERROR "Error: value not in range %i-%i\n",0,board->N*board->N
 
 #define GENERATE_PARAMETER_X_NOT_ENOUGH_EMPTY_CELLS "Error: value not in range %i-%i\n",0,emptyCells
+#define GENERATE_FAILED_MAX_RETRYS "Error: generation failed after %i times \n",GENERATE_CMD_NUM_RETRYS
+
 
 #define PARAMETER_X_NOT_DOUBLE_ERROR "Error: Parameter x is not a double\n"
 #define FIXED_CELL_ERROR "Error: Cell is fixed\n"
@@ -75,6 +77,11 @@
 
 #define GENERATE_CMD_NUM_RETRYS 3
 #define VAR_NAME_MAX_SIZE 12  /* 2*3 + 6  */
+
+#define BOARD_IS_SOLVABLE_MSG "Board is solvable ! \n"
+#define BOARD_IS_NOT_SOLVABLE_MSG "Board is not solvable ! \n"
+#define BOARD_IS_NOT_SOLVABLE_ERROR "Error: Board is not solvable ! \n"
+#define HINT_SINGLE_CELL_MSG "Hint: set <%i,%i> to: %i \n",col+1,row+1,k +1
 
 /*loader confs*/
 #define FILE_OPENING_ERROR "ERROR: in opening file\n"
