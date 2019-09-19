@@ -185,10 +185,12 @@ bool removeYRandomCells(Board* board,int cellsToRemove){
  * gets a board and returns the gurobi env
  * adds variables and constraints in a very smart way !
  * the variable type is given too as vtype
+ * if this is a LP (not GRB_BINARY) then uses a  target function
  */
 int getNewILPModel(Board* board,GRBmodel** model_ptr ,GRBenv** env_ptr,char vtype){
     int N,i,j,k,error,value;
     bool* valid;
+    double weight;
 
 
     /* Create an empty model */
@@ -219,12 +221,16 @@ int getNewILPModel(Board* board,GRBmodel** model_ptr ,GRBenv** env_ptr,char vtyp
             value = getCellValue(board,i,j);
 
             if (value == 0){
-                detectLegalValues(board,i,j,valid);
+                weight= (double) detectLegalValues(board,i,j,valid);
+                /*printf("i:%i, j:%i weight is: %f \n",i,j,weight);*/
                 for (k = 0; k < N; ++k) {
                     if (valid[k+1]){
                         sprintf(name,"x[%d,%d,%d]",i,j,k+1);
                         /*printf("i: %i,j: %i,k: %i, name: %s\n",i,j,k,name);*/
-                        error = GRBaddvar(model, 0, NULL, NULL, 0.0, 0.0, 1.0,vtype, name);
+                        if (vtype == GRB_BINARY){
+                            weight = 0.0;
+                        }
+                        error = GRBaddvar(model, 0, NULL, NULL, weight, 0.0, 1.0,vtype, name);
                         if (error) return error;
                     }
                 }
