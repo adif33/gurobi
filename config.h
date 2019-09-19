@@ -5,13 +5,13 @@
  * General
  */
 #define GAME_BEGINNING_BANNER "~~~~WELCOME~~~~\n\n"
-#define GAME_ENDING_BANNER "This is the end\nEXIT\n"
+#define GAME_ENDING_BANNER "EXITING\n"
 
 /*
  * Parser related
  */
 
-#define ENTER_COMMAND_BANNER "What is your command:\n"
+#define ENTER_COMMAND_BANNER "Enter command:\n"
 
 /*
 #define PARAMETER_X_MISSING_ERROR "Error: Parameter x is missing\n"
@@ -33,7 +33,7 @@
 #define INVALID_CMD_WRONG_MODE_ERROR "ERROR: invalid command\n"
 
 
-#define WRONG_MODE_ERROR "ERROR: Wrong mode\n"
+#define WRONG_MODE_ERROR "ERROR: invalid command - Wrong mode\n"
 
 #define PARAMETER_X_CONVERSION_ERROR "ERROR: not in range %i-%i\n",0,board->N
 #define PARAMETER_Y_CONVERSION_ERROR "ERROR: not in range %i-%i\n",0,board->N
@@ -90,7 +90,7 @@
 
 /*is solved*/
 
-#define SOLVED_MESSAGE "OMG I am so solved right now!!\n"
+#define SOLVED_MESSAGE "Board is solved!!\n"
 #define NOT_SOLVED_MESSAGE "You call this solved? Try again...\n"
 
 /*autofill*/
