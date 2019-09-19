@@ -14,9 +14,9 @@
 #define ENTER_COMMAND_BANNER "Enter command:\n"
 
 
-#define PARAMETER_X_MISSING_ERROR "Error: Parameter x is missing\n"
-#define PARAMETER_Y_MISSING_ERROR "Error: Parameter y is missing\n"
-#define PARAMETER_Z_MISSING_ERROR "Error: Parameter z is missing\n"
+#define PARAMETER_X_MISSING_ERROR "ERROR: Parameter x is missing\n"
+#define PARAMETER_Y_MISSING_ERROR "ERROR: Parameter y is missing\n"
+#define PARAMETER_Z_MISSING_ERROR "ERROR: Parameter z is missing\n"
 
 
 
