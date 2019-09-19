@@ -2,7 +2,8 @@
 #include "gurobi_c.h"
 
 /*
- * assumes that all the
+ * recieves an array of ins and their weight and then chooses random number
+ * and returns the value according to the weights
  */
 int chooseRandomNumberByWeight(int* numbers,double* weights,int size){
     int i,random;
@@ -11,7 +12,7 @@ int chooseRandomNumberByWeight(int* numbers,double* weights,int size){
     double sum =0;
 
     for ( i = 0; i < size; ++i) {
-        printf("number is: %i weight is:%f \n",numbers[i],weights[i]);
+        /*printf("number is: %i weight is:%f \n",numbers[i],weights[i]);*/
         sum += weights[i];
     }
     if (sum == 0){
@@ -180,10 +181,16 @@ bool removeYRandomCells(Board* board,int cellsToRemove){
     return true;
 
 }
-
+/*
+ * gets a board and returns the gurobi env
+ * adds variables and constraints in a very smart way !
+ * the variable type is given too as vtype
+ * if this is a LP (not GRB_BINARY) then uses a  target function
+ */
 int getNewILPModel(Board* board,GRBmodel** model_ptr ,GRBenv** env_ptr,char vtype){
     int N,i,j,k,error,value;
     bool* valid;
+    double weight;
 
 
     /* Create an empty model */
@@ -214,12 +221,16 @@ int getNewILPModel(Board* board,GRBmodel** model_ptr ,GRBenv** env_ptr,char vtyp
             value = getCellValue(board,i,j);
 
             if (value == 0){
-                detectLegalValues(board,i,j,valid);
+                weight= (double) detectLegalValues(board,i,j,valid);
+                /*printf("i:%i, j:%i weight is: %f \n",i,j,weight);*/
                 for (k = 0; k < N; ++k) {
                     if (valid[k+1]){
                         sprintf(name,"x[%d,%d,%d]",i,j,k+1);
                         /*printf("i: %i,j: %i,k: %i, name: %s\n",i,j,k,name);*/
-                        error = GRBaddvar(model, 0, NULL, NULL, 0.0, 0.0, 1.0,vtype, name);
+                        if (vtype == GRB_BINARY){
+                            weight = 0.0;
+                        }
+                        error = GRBaddvar(model, 0, NULL, NULL, weight, 0.0, 1.0,vtype, name);
                         if (error) return error;
                     }
                 }
@@ -229,7 +240,9 @@ int getNewILPModel(Board* board,GRBmodel** model_ptr ,GRBenv** env_ptr,char vtyp
     free(valid);
     return error;
 }
-
+/*
+ * add constrains  - every cell has a single value
+ */
 int addConstEachCellSingleValueFullBoard(Board* board,GRBmodel *model,int* ind, double* val,int N){
     int i,j,k, error,index,count;
     char name[VAR_NAME_MAX_SIZE];
@@ -261,7 +274,9 @@ int addConstEachCellSingleValueFullBoard(Board* board,GRBmodel *model,int* ind, 
     }
     return error;
 }
-
+/*
+ * add constrains  - every row has a single value
+ */
 int addConstEachRowSingleValueFullBoard(GRBmodel *model,int* ind, double* val,int N){
     int i,j,k, error,index,count;
     char name[VAR_NAME_MAX_SIZE];
@@ -291,6 +306,9 @@ int addConstEachRowSingleValueFullBoard(GRBmodel *model,int* ind, double* val,in
     }
     return error;
 }
+/*
+ * add constrains  - every column has a single value
+ */
 int addConstEachColumnSingleValueFullBoard(GRBmodel *model,int* ind, double* val,int N){
     int i,j,k, error,index,count;
     char name[VAR_NAME_MAX_SIZE];
@@ -319,6 +337,9 @@ int addConstEachColumnSingleValueFullBoard(GRBmodel *model,int* ind, double* val
     }
     return error;
 }
+/*
+ * add constrains  - every block has a single value
+ */
 int addConstEachBlockSingleValueFullBoard(Board* board,GRBmodel *model,int* ind, double* val,int N){
     int i,ib,j,jb,k, error,index,count,n,m;
     char name[VAR_NAME_MAX_SIZE];
@@ -357,7 +378,9 @@ int addConstEachBlockSingleValueFullBoard(Board* board,GRBmodel *model,int* ind,
     return error;
 }
 
-
+/*
+ * adds all of the constrains
+ */
 
 int addILPConstraints(Board* board,GRBmodel *model){
     int i,error,N ;
@@ -478,9 +501,9 @@ bool validateBoard(Board* board){
     if (error) goto QUIT;
 
     if (optimstatus == GRB_OPTIMAL) {
-        printf("Board is solvable ! \n");
+        printf(BOARD_IS_SOLVABLE_MSG);
     } else {
-        printf("Board is not solvable ! \n");
+        printf(BOARD_IS_NOT_SOLVABLE_MSG);
     }
 
 
@@ -496,8 +519,13 @@ bool validateBoard(Board* board){
 
     return res;
 }
-bool generateBoard(Board** board_ptr,int cellsToFill, int cellsToRemove ){
-    int i,emptyCells,error ,optimstatus;
+/*
+ * runs in a loop. tries to  fill random valid values,
+ * then tries to solve using ILP and then removes random Y cells
+ * if falis, returns false and pring relevant error msg
+ */
+bool generateBoard(Board** board_ptr,int cellsToFill, int cellsToKeep ){
+    int i,N,emptyCells,error ,optimstatus, cellsToRemove;
     Board* board ;
     Board* copy ;
     GRBmodel *model = NULL;
@@ -506,9 +534,11 @@ bool generateBoard(Board** board_ptr,int cellsToFill, int cellsToRemove ){
 
     res =true;
     board = *board_ptr;
+    N = board->N;
     srand(time(NULL));
 
     emptyCells =countEmptyCells(board);
+    cellsToRemove = N*N - cellsToKeep;
 
     if ( emptyCells < cellsToFill ){
         printf(GENERATE_PARAMETER_X_NOT_ENOUGH_EMPTY_CELLS);
@@ -526,7 +556,7 @@ bool generateBoard(Board** board_ptr,int cellsToFill, int cellsToRemove ){
     for (i = 0; i < GENERATE_CMD_NUM_RETRYS ; ++i) {
 
         copy = creatCopiedBoard(board);
-        printf("created copy %p \n",(void*)copy);
+        /*printf("created copy %p \n",(void*)copy);*/
 
         if (!tryToFillBoard(copy,cellsToFill)){
             freeBoard(copy);
@@ -541,12 +571,12 @@ bool generateBoard(Board** board_ptr,int cellsToFill, int cellsToRemove ){
         if (error) goto QUIT;
 
         if (optimstatus == GRB_OPTIMAL) {
-            printf("Board is solvable ! \n");
+            /*printf("Board is solvable ! \n");*/
             error = updateSolutionToBoard(copy,model);
             if (error) goto QUIT;
             break;
         } else {
-            printf("Board is not solvable ! \n");
+            /*printf("Board is not solvable ! \n");*/
             freeBoard(copy);
             continue;
         }
@@ -554,7 +584,7 @@ bool generateBoard(Board** board_ptr,int cellsToFill, int cellsToRemove ){
     }
 
     if (i == GENERATE_CMD_NUM_RETRYS ){
-        printf("Error: generation failed after %i times \n",GENERATE_CMD_NUM_RETRYS);
+        printf(GENERATE_FAILED_MAX_RETRYS);
         return false;
     }
 
@@ -579,6 +609,9 @@ bool generateBoard(Board** board_ptr,int cellsToFill, int cellsToRemove ){
 
     return res;
 }
+/*
+ * update LP solution to the given board according to threshold
+ */
 int updateLPSolutionToBoard(Board* board,GRBmodel *model,double thres){
     int i,j,k,error,index,value,N;
     double dtmp;
@@ -636,6 +669,10 @@ int updateLPSolutionToBoard(Board* board,GRBmodel *model,double thres){
     free(valid);
     return error;
 }
+/*
+ * uses LP to solve the board, then if there is a solution
+ * shows rhe relevant values according the threshold
+ */
 bool guessBoard(Board* board, double threshold){
     int error, optimstatus;
     bool res;
@@ -654,12 +691,13 @@ bool guessBoard(Board* board, double threshold){
     if (error) goto QUIT;
 
     if (optimstatus == GRB_OPTIMAL) {
-        printf("Board is solvable ! \n");
+        /*printf("Board is solvable ! \n");*/
         error =updateLPSolutionToBoard(board,model,threshold);
         if (error) goto QUIT;
 
     } else {
-        printf("Board is not solvable ! \n");
+        printf(BOARD_IS_NOT_SOLVABLE_ERROR);
+        res = false;
     }
 
 
@@ -675,7 +713,10 @@ bool guessBoard(Board* board, double threshold){
 
     return res;
 }
-
+/*
+ * shows the scores for the relavant cell above 0 score
+ * according to the model
+ */
 int showLPSolutionSingleCell(Board* board,GRBmodel *model,int row, int col){
     int k, N, error,index;
     double dtmp;
@@ -699,6 +740,9 @@ int showLPSolutionSingleCell(Board* board,GRBmodel *model,int row, int col){
 
     return 0;
 }
+/*
+ * gives the hing to the given cell according to the gurobi model
+ */
 
 int showILPSolutionSingleCell(Board* board,GRBmodel *model,int row, int col){
     int k, N, error,index;
@@ -715,7 +759,7 @@ int showILPSolutionSingleCell(Board* board,GRBmodel *model,int row, int col){
             error = GRBgetdblattrelement(model, "X", index, &dtmp);
             if (error) return error;
             if (dtmp > 0 ){
-                printf("Used ILP Solution to get the Value: %i \n",k +1);
+                printf(HINT_SINGLE_CELL_MSG);
                 return 0;
             }
         }
@@ -740,12 +784,13 @@ bool guessHintBoard(Board* board, int row,int col){
     if (error) goto QUIT;
 
     if (optimstatus == GRB_OPTIMAL) {
-        printf("Board is solvable ! \n");
+        /*printf("Board is solvable ! \n");*/
         error = showLPSolutionSingleCell(board,model,row,col);
         if (error) goto QUIT;
 
     } else {
-        printf("Board is not solvable ! \n");
+        printf(BOARD_IS_NOT_SOLVABLE_ERROR);
+        res= false;
     }
 
 
@@ -761,6 +806,9 @@ bool guessHintBoard(Board* board, int row,int col){
 
     return res;
 }
+/*
+ * prints a hint to user according to the gurobi ILP solution
+ */
 bool hint(Board* board, int row,int col){
     int error, optimstatus;
     bool res;
@@ -777,12 +825,13 @@ bool hint(Board* board, int row,int col){
     if (error) goto QUIT;
 
     if (optimstatus == GRB_OPTIMAL) {
-        printf("Board is solvable ! \n");
+        /*printf("Board is solvable ! \n");*/
         error = showILPSolutionSingleCell(board,model,row,col);
         if (error) goto QUIT;
 
     } else {
-        printf("Board is not solvable ! \n");
+        printf(BOARD_IS_NOT_SOLVABLE_ERROR);
+        res = false;
     }
 
 

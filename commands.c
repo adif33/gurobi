@@ -314,7 +314,7 @@ bool doGenerateCommand(CMD* command,Board** board_ptr){
         printf(GENERATE_PARAMETER_X_NOT_IN_RANGE_ERROR);
         return false;
     }
-    if (command->y_int < 1 || command->y_int > board->N*board->N ){
+    if (command->y_int < 0 || command->y_int > board->N*board->N ){
         printf(GENERATE_PARAMETER_Y_NOT_IN_RANGE_ERROR);
         return false;
     }
@@ -432,7 +432,9 @@ bool doHintCommand(CMD* command,Board* board){
         printf(NOT_EMPTY_ERROR);
         return false;
     }
-    return hint(board,y,x);
+
+    hint(board,y,x);
+    return false;
 }
 bool doGuessHintCommand(CMD* command,Board* board){
     int x,y;
@@ -462,7 +464,8 @@ bool doGuessHintCommand(CMD* command,Board* board){
         printf(NOT_EMPTY_ERROR);
         return false;
     }
-    return guessHintBoard(board,y,x);
+    guessHintBoard(board,y,x);
+    return false;
 }
 bool doNumSolutionsCommand(Board** board_ptr){
     int number;
