@@ -330,11 +330,6 @@ bool doUndoCommand(DubList* list,Board** board_ptr){
     Board* board = *board_ptr;
     if (goStepBack(list) )
     {
-<<<<<<< HEAD
-=======
-        /*printf("freeing board %p \n",(void*) board);*/
-        freeBoard(board);
->>>>>>> 27a524b8694624fadd342641330b19c9736aefb3
         *board_ptr = creatCopiedBoard((list->curr)->board);
         delta(board, *board_ptr);
         freeBoard(board);
@@ -346,11 +341,6 @@ bool doRedoCommand(DubList* list,Board** board_ptr){
     Board* board = *board_ptr;
     if (goStepForward(list) )
     {
-<<<<<<< HEAD
-=======
-        /*printf("freeing board %p \n",(void*) board);*/
-        freeBoard(board);
->>>>>>> 27a524b8694624fadd342641330b19c9736aefb3
         *board_ptr = creatCopiedBoard((list->curr)->board);
         delta(board, *board_ptr);
         freeBoard(board);
