@@ -73,7 +73,7 @@
 
 #define PARAMETER_X_NOT_DOUBLE_ERROR "ERROR: x should be double\n"
 #define FIXED_CELL_ERROR "ERROR: Cell is fixed\n"
-#define NOT_EMPTY_ERROR "ERROR: Cell is not empty\n"
+#define NOT_EMPTY_ERROR "ERROR: Cell is not empty!!\n"
 
 #define GENERATE_CMD_NUM_RETRYS 1000
 #define VAR_NAME_MAX_SIZE 12  /* 2*3 + 6  */
