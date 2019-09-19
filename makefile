@@ -5,6 +5,8 @@ COMP_FLAG = -ansi -Wall -Wextra  -pedantic-errors
 GUROBI_COMP = -I/opt/gurobi811/linux64/include
 GUROBI_LIB = -L/opt/gurobi811/linux64/lib -lgurobi81
 
+all:$(EXEC)
+
 $(EXEC): $(OBJS)
 	$(CC) $(OBJS) $(GUROBI_LIB) -o $@ -lm
 main.o: main.c main.h
@@ -22,6 +24,8 @@ loader.o: loader.c loader.h
 ilp_solver.o: ilp_solver.c ilp_solver.h
 	$(CC) $(COMP_FLAG) $(GUROBI_COMP) -c $*.c
 commands.o: commands.c commands.h
+	$(CC) $(COMP_FLAG) $(GUROBI_COMP) -c $*.c
+logic.o: logic.c logic.h
 	$(CC) $(COMP_FLAG) $(GUROBI_COMP) -c $*.c
 clean:
 	rm -f $(OBJS) $(EXEC)
