@@ -426,6 +426,10 @@ int solveBoard(Board* board,GRBmodel** model_ptr ,GRBenv** env_ptr,char vtype){
     *env_ptr = env;
     *model_ptr = model;
 
+    /* Update model because its laze */
+    error = GRBupdatemodel(model);
+    if (error) return error ;
+
     /* Write model to 'sudoku.lp' */
     error = GRBwrite(model, "sudoku.lp");
     if (error) return error ;
@@ -578,6 +582,8 @@ bool generateBoard(Board** board_ptr,int cellsToFill, int cellsToKeep ){
         } else {
             /*printf("Board is not solvable ! \n");*/
             freeBoard(copy);
+            GRBfreemodel(model);
+            GRBfreeenv(env);
             continue;
         }
 

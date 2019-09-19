@@ -30,15 +30,15 @@
 
 #define WRONG_MODE_ERROR "ERROR: invalid command (wrong mode)\n"
 
-#define PARAMETER_X_CONVERSION_ERROR "ERROR: not in range %i-%i\n",0,board->N
-#define PARAMETER_Y_CONVERSION_ERROR "ERROR: not in range %i-%i\n",0,board->N
-#define PARAMETER_Z_CONVERSION_ERROR "ERROR: not in range %i-%i\n",0,board->N
+#define PARAMETER_X_CONVERSION_ERROR "ERROR: X not in range %i-%i\n",0,board->N
+#define PARAMETER_Y_CONVERSION_ERROR "ERROR: Y not in range %i-%i\n",0,board->N
+#define PARAMETER_Z_CONVERSION_ERROR "ERROR: Z not in range %i-%i\n",0,board->N
 
 
 
-#define PARAMETER_X_NOT_IN_RANGE_ERROR "ERROR: not in range %i-%i\n",1,board->N
-#define PARAMETER_Y_NOT_IN_RANGE_ERROR "ERROR: not in range %i-%i\n",1,board->N
-#define PARAMETER_Z_NOT_IN_RANGE_ERROR "ERROR: not in range %i-%i\n",0,board->N
+#define PARAMETER_X_NOT_IN_RANGE_ERROR "ERROR: X not in range %i-%i\n",1,board->N
+#define PARAMETER_Y_NOT_IN_RANGE_ERROR "ERROR: Y not in range %i-%i\n",1,board->N
+#define PARAMETER_Z_NOT_IN_RANGE_ERROR "ERROR: Z not in range %i-%i\n",0,board->N
 
 #define PARAMETER_X_ILLEGAL_ERROR "ERROR: x value is not possible\n"
 #define PARAMETER_Y_ILLEGAL_ERROR "ERROR: y value is not possible\n"
@@ -52,10 +52,10 @@
 /*
  * GUROBI related
  */
-#define GENERATE_PARAMETER_X_NOT_IN_RANGE_ERROR "ERROR: not in range %i-%i\n",0,board->N*board->N
-#define GENERATE_PARAMETER_Y_NOT_IN_RANGE_ERROR "ERROR: not in range %i-%i\n",0,board->N*board->N
+#define GENERATE_PARAMETER_X_NOT_IN_RANGE_ERROR "ERROR: X not in range %i-%i\n",0,board->N*board->N
+#define GENERATE_PARAMETER_Y_NOT_IN_RANGE_ERROR "ERROR: Y not in range %i-%i\n",0,board->N*board->N
 
-#define GENERATE_PARAMETER_X_NOT_ENOUGH_EMPTY_CELLS "ERROR: not in range %i-%i\n",0,emptyCells
+#define GENERATE_PARAMETER_X_NOT_ENOUGH_EMPTY_CELLS "ERROR: X not in range %i-%i\n",0,emptyCells
 #define GENERATE_FAILED_MAX_RETRYS "ERROR: cant generate. tried %i times\n",GENERATE_CMD_NUM_RETRYS
 
 
@@ -66,9 +66,9 @@
 #define GENERATE_CMD_NUM_RETRYS 1000
 #define VAR_NAME_MAX_SIZE 12  /* 2*3 + 6  */
 
-#define BOARD_IS_SOLVABLE_MSG "This board is solvable!\n"
-#define BOARD_IS_NOT_SOLVABLE_MSG "You cant solve this board!\n"
-#define BOARD_IS_NOT_SOLVABLE_ERROR "Error: You cant solve this board!\n"
+#define BOARD_IS_SOLVABLE_MSG "The board is solvable!\n"
+#define BOARD_IS_NOT_SOLVABLE_MSG "The board is not solvable!\n"
+#define BOARD_IS_NOT_SOLVABLE_ERROR "ERROR: The board is not solvable!\n"
 #define HINT_SINGLE_CELL_MSG "Hint: set cell (%i,%i) to: %i\n",col+1,row+1,k +1
 
 /*loader confs*/
